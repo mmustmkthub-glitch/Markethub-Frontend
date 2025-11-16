@@ -88,21 +88,7 @@
   <!-- JS -->
   <script src="contact.js"></script>
 
-  <!-- GOOGLE MAP -->
-  <script>
-    function initMap() {
-      const location = { lat: 0.2833, lng: 34.7667 }; // Kakamega, MMUST
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: location,
-      });
-      new google.maps.marker.AdvancedMarkerElement({
-        map,
-        position: location,
-        title: "MMUST MarketHub HQ",
-      });
-    }
-  </script>
+
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_VALID_GOOGLE_API_KEY&callback=initMap"></script>
 </body>
 </html>
