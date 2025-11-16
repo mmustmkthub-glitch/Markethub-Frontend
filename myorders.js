@@ -3,7 +3,7 @@
    API-Only Version (Authenticated Buyers Only)
 ========================================================= */
 
-const BASE_API = "http://127.0.0.1:8000/api";
+const BASE_API = "https://mmustmkt-hub.onrender.com/api";
 const API_URLS = {
   orders: `${BASE_API}/orders/mine/`,
   searchOrders: `${BASE_API}/orders/search/`, // 🆕 search endpoint
