@@ -1,0 +1,23 @@
+body{
+    background-color: #FFFBF3;
+    margin: 0;
+    padding: 30px;
+}
+
+.policy-box{
+    background-color: white;
+    margin: 0;
+    padding: 30px;
+    border: 1px solid #FFA800;
+    border-radius: 10px;
+}
+
+h1{
+    text-align: center;
+    color: #5a5a5a;
+}
+h3{
+    color: #5a5a5a}
+b{
+    color: #5a5a5a;
+}

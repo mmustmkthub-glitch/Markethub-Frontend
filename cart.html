@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart | MMUST MarketHub</title>
+
+  <!-- 🔗 Stylesheet -->
+  <link rel="stylesheet" href="marketplace.css" />
+
+  <!-- 🧩 Favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+
+  <!-- 📖 SEO Meta -->
+  <meta name="description" content="View and manage your shopping cart on MMUST MarketHub — your student marketplace for buying and selling products easily.">
+</head>
+
+<body>
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <div class="header-content">
+      <h1>🛒 Your Cart</h1>
+      <a href="marketplace.html" class="back-btn">← Back to Marketplace</a>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CART SECTION ================= -->
+  <main class="cart-container">
+    <!-- Cart Table -->
+    <div class="table-responsive">
+      <table id="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price (KES)</th>
+            <th>Seller</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody id="cart-items">
+          <tr id="empty-cart">
+            <td colspan="4" style="text-align:center; padding: 20px;">
+              🛍️ Your cart is empty. <a href="marketplace.html">Browse products</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="cart-summary">
+      <h3>Total: KES <span id="cart-total">0</span></h3>
+      <button id="checkout" disabled>Place Order</button>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <p>&copy; 2025 MMUST MarketHub — Empowering Student Commerce</p>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="cart.js"></script>
+</body>
+</html>

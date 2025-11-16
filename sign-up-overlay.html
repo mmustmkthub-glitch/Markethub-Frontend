@@ -1,0 +1,104 @@
+<div class="container">
+    <div class="form-box signup active" id="signup">
+        <h1 id="title">Sign up</h1>
+        <form action="">
+            
+                <div class="input-field" id="nameField">
+                    <span class="icon">
+                        <ion-icon name="person"></ion-icon>
+                    </span>
+                    <input type="text" placeholder="Username">
+                </div>
+                <div class="input-field">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" placeholder="Email">
+                </div>
+                <div class="input-field">
+                    <span class="icon"><ion-icon name="call"></ion-icon></span>
+                    <input type="tel" placeholder="Phone number">
+                </div>
+                <div class="input-field">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="tel" placeholder="ID">
+                </div>
+                <div class="input-field">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <select name="role" id="role">
+                        <option value="buyer">Buyer</option>
+                        <option value="seller">Seller</option>
+                        <option value="delivery">Delivery Partner</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="password" placeholder="Password">
+                </div>
+            
+            <label class="remember-terms-agree">
+                <input type="checkbox" id="agree-terms"> I agree to terms and conditions
+            </label>
+            <div class="btn-field">
+                <button type="button" id="signupBtn">Sign up</button>
+            </div>
+            <div class="login-register">
+                <p>Already have an account? <a href="#" id="showSignin">Sign In</a></p>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-box signin" id="signin">
+        <h1 id="title">Sign in</h1>
+        <form action="">
+            
+                <div class="input-field" id="nameField">
+                    <span class="icon">
+                        <ion-icon name="person"></ion-icon>
+                    </span>
+                    <input type="text" placeholder="Username">
+                </div>
+                <div class="input-field">
+                    <span class="icon">
+                        <ion-icon name="lock-closed"></ion-icon>
+                    </span>
+                    <input type="password" placeholder="Password">
+                </div>
+            
+            <div class="remember-forget">
+                <label class="remember-terms-agree">
+                    <input type="checkbox" id="agree-terms-remember"> Remember me
+                </label>
+                <a href="#"> Forgot Password?</a>
+            </div>
+            <div class="btn-field">
+                <button type="button" id="signinBtn"><a href="">Sign in</a></button>
+            </div>
+            <div class="login-register">
+                <p>Don't have an account <a href="#" id="showSignup">Sign up</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Include the Sign In/Sign Up toggle logic here!
+    const signup = document.getElementById("signup");
+    const signin = document.getElementById("signin");
+    const showSignin = document.getElementById("showSignin");
+    const showSignup = document.getElementById("showSignup");
+
+    showSignin.addEventListener("click", (e) => {
+        e.preventDefault();
+        signup.classList.remove("active");
+        signin.classList.add("active");
+    });
+
+    showSignup.addEventListener("click", (e) => {
+        e.preventDefault();
+        signin.classList.remove("active");
+        signup.classList.add("active");
+    });
+</script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

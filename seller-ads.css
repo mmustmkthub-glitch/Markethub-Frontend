@@ -1,0 +1,366 @@
+/* ==========================
+   MMUST MarketHub - Ads Page
+   Dark Theme (Yellow + #1E1F29)
+   ========================== */
+
+:root {
+  --primary: #1E1F29;
+  --yellow: #FFD700;
+  --light-yellow: #FFEB70;
+  --text: #f5f5f5;
+  --muted-text: #cccccc;
+  --card-bg: #2A2B37;
+  --shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", "Poppins", sans-serif;
+  background: var(--primary);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* --------------------------
+   HEADER
+-------------------------- */
+.header {
+  background: var(--primary);
+  color: var(--yellow);
+  padding: 15px 0;
+  box-shadow: var(--shadow);
+  border-bottom: 2px solid var(--yellow);
+}
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--yellow);
+}
+
+.header nav a {
+  color: var(--text);
+  margin-left: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.header nav a:hover {
+  color: var(--yellow);
+}
+
+/* --------------------------
+   BANNER / HERO SECTION
+-------------------------- */
+.banner-section {
+  position: relative;
+  margin: 30px auto 50px;
+  max-width: 1100px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  background: #000;
+}
+
+.banner-inner {
+  display: flex;
+  transition: transform 0.8s ease;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-overlay {
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  background: rgba(30, 31, 41, 0.75);
+  color: var(--yellow);
+  padding: 14px 18px;
+  border-radius: 8px;
+  max-width: 70%;
+  border-left: 4px solid var(--yellow);
+}
+
+.banner-overlay h2 {
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+}
+
+.banner-overlay p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  color: var(--light-yellow);
+}
+
+/* Banner navigation buttons */
+.banner-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: var(--yellow);
+  font-size: 1.8rem;
+  padding: 8px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.banner-btn:hover {
+  background: var(--yellow);
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+#prevSlide {
+  left: 10px;
+}
+
+#nextSlide {
+  right: 10px;
+}
+
+/* --------------------------
+   INTRO SECTION
+-------------------------- */
+.intro {
+  text-align: center;
+  margin: 40px 0 20px;
+}
+
+.intro h2 {
+  color: var(--yellow);
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 1rem;
+  color: var(--muted-text);
+}
+
+/* --------------------------
+   AD GRID LAYOUT
+-------------------------- */
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.ad-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.ad-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+}
+
+.ad-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-bottom: 2px solid var(--yellow);
+}
+
+.ad-info {
+  padding: 18px;
+}
+
+.ad-info h3 {
+  margin-bottom: 6px;
+  color: var(--yellow);
+  font-size: 1.2rem;
+}
+
+.ad-info p {
+  color: var(--muted-text);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.ad-info strong {
+  color: var(--light-yellow);
+}
+
+.btn {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--primary);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--light-yellow);
+  transform: scale(1.05);
+}
+
+/* --------------------------
+   FOOTER
+-------------------------- */
+.footer {
+  background: var(--primary);
+  color: var(--yellow);
+  text-align: center;
+  padding: 14px 0;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  border-top: 2px solid var(--yellow);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* --------------------------
+   RESPONSIVENESS
+-------------------------- */
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: column;
+  }
+
+  .header nav {
+    margin-top: 10px;
+  }
+
+  .ad-card img {
+    height: 160px;
+  }
+
+  .intro h2 {
+    font-size: 1.5rem;
+  }
+
+  .banner-section {
+    height: 220px;
+  }
+
+  .banner-overlay {
+    max-width: 90%;
+    padding: 10px 14px;
+  }
+}
+
+/* --------------------------
+   MODAL POPUP STYLES
+-------------------------- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 31, 41, 0.9);
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  width: 90%;
+  max-width: 700px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.4s ease;
+  position: relative;
+  border: 1px solid var(--yellow);
+}
+
+.modal-content img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.modal-details {
+  padding: 20px;
+  color: var(--text);
+}
+
+.modal-details h2 {
+  color: var(--yellow);
+  margin-bottom: 10px;
+}
+
+.modal-details p {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: var(--muted-text);
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  color: var(--yellow);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.close:hover {
+  color: var(--light-yellow);
+  transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

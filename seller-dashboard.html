@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seller Dashboard — MMUST MarketHub</title>
+  
+  <!-- ✅ CSS -->
+  <link rel="stylesheet" href="seller-dashboard.css" />
+
+  <!-- ✅ Paystack JS -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+
+<body>
+  <!-- ================= HEADER ================= -->
+  <header class="sd-header">
+    <div class="container">
+      <div class="brand">Seller's Dashboard</div>
+      <div class="actions">
+        <button id="logoutBtn" class="btn small">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="sd-main container">
+    <!-- SIDEBAR -->
+    <aside class="sd-sidebar" aria-label="Sidebar Navigation">
+      <nav>
+        <ul>
+          <li class="active" data-tab="products">Products</li>
+          <li data-tab="create">Create Product</li>
+          <li data-tab="ads">Ad Campaigns</li>
+          <li data-tab="subscriptions">Subscriptions</li>
+          <li data-tab="orders">Orders</li>
+          <li data-tab="feedbacks">Feedbacks</li>
+          <li data-tab="settings">Settings</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MAIN SECTION -->
+    <section class="sd-content">
+
+      <!-- PRODUCTS -->
+      <section id="tab-products" class="tab-pane active">
+        <div class="toolbar">
+          <div>
+            <input id="searchProducts" placeholder="Search products..." aria-label="Search products" />
+            <select id="categoryFilter" aria-label="Filter by category">
+              <option value="all">All Categories</option>
+              <option value="Clothes">Clothes</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Food">Food</option>
+              <option value="Services">Services</option>
+            </select>
+          </div>
+          <div>
+            <button id="refreshProducts" class="btn">Refresh</button>
+            <button id="newProductBtn" class="btn primary">+ New Product</button>
+          </div>
+        </div>
+
+        <div id="productsGrid" class="grid"></div>
+        <div class="pager">
+          <button id="prevPage" class="btn">Prev</button>
+          <span id="pageInfo">Page 1</span>
+          <button id="nextPage" class="btn">Next</button>
+        </div>
+      </section>
+
+      <!-- PAYMENT CONTAINER -->
+      <div id="subscriptionPlans">
+        <div id="paymentContainer" style="display:none;"></div> <!-- JS populates -->
+      </div>
+
+      <!-- CREATE PRODUCT -->
+      <section id="tab-create" class="tab-pane">
+        <h2>Create / Edit Product</h2>
+        <form id="productForm" class="form" enctype="multipart/form-data">
+          <input type="hidden" id="productId" />
+
+          <label>Product Image
+            <input id="productImage" type="file" accept="image/*" required />
+          </label>
+
+          <label>Product Name
+            <input id="productName" required placeholder="Enter product name" />
+          </label>
+
+          <label>Category
+            <select id="productCategory" required>
+              <option value="">Select category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Clothes">Clothes</option>
+              <option value="Food">Food</option>
+              <option value="Services">Services</option>
+            </select>
+          </label>
+
+          <label>Price (KES)
+            <input id="productPrice" required type="number" step="0.01" min="1" />
+          </label>
+
+          <label>Location
+            <input id="productLocation" required placeholder="e.g. Kakamega, Nairobi" />
+          </label>
+
+          <label>Description
+            <textarea id="productDescription" rows="4" required></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Save Product</button>
+            <button id="cancelEdit" type="button" class="btn">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ADS -->
+      <section id="tab-ads" class="tab-pane">
+        <h2>🧾 Create Advertisement</h2>
+        <form id="adForm" enctype="multipart/form-data">
+          <div class="form-grid">
+            <div>
+              <label for="adBanner">Ad Banner Image</label>
+              <input id="adBanner" name="image" type="file" accept="image/*" required />
+            </div>
+
+            <div>
+              <label for="adTitle">Campaign Title</label>
+              <input id="adTitle" name="title" type="text" placeholder="Enter campaign title" required />
+            </div>
+
+            <div>
+              <label for="adTarget">Target Audience</label>
+              <select id="adTarget" name="target_audience" required>
+                <option value="">Select target group</option>
+                <option value="Students">Students</option>
+                <option value="Staff">Staff</option>
+                <option value="General Public">General Public</option>
+                <option value="Local Businesses">Local Businesses</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="adDuration">Duration (days)</label>
+              <input id="adDuration" name="duration_days" type="number" min="1" max="30" step="1" required />
+            </div>
+
+            <div>
+              <label for="adBudget">Budget (KES)</label>
+              <input id="adBudget" name="budget_kes" type="number" min="1000" step="500" required />
+            </div>
+
+            <div class="full-width">
+              <label for="adDescription">Ad Description</label>
+              <textarea id="adDescription" name="description" rows="4" placeholder="Write a short description..." required></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn primary">Submit Ad</button>
+        </form>
+
+        <div id="adsList" class="ads-display"></div>
+      </section>
+
+      <!-- SUBSCRIPTIONS -->
+      <section id="tab-subscriptions" class="tab-pane">
+        <h2>Choose Your Subscription Plan</h2>
+        <p class="hint">Upgrade to increase your product and ad upload limits.</p>
+
+        <div class="subscriptions-grid">
+          <div class="plan-card free">
+            <h3>Free Tier</h3>
+            <p><strong>Price:</strong> KES 0 / month</p>
+            <ul>
+              <li>Upload up to 5 products</li>
+              <li>1 free ad per month</li>
+              <li>Basic visibility</li>
+            </ul>
+            <button class="btn select-plan" data-plan="free">Select Free</button>
+          </div>
+
+          <div class="plan-card silver">
+            <h3>Silver Package</h3>
+            <p><strong>Price:</strong> KES 500 / month</p>
+            <ul>
+              <li>Upload up to 30 products</li>
+              <li>5 ads per month</li>
+              <li>Priority listing</li>
+            </ul>
+            <button class="btn select-plan" data-plan="silver">Upgrade to Silver</button>
+          </div>
+
+          <div class="plan-card gold">
+            <h3>Gold Package</h3>
+            <p><strong>Price:</strong> KES 1500 / month</p>
+            <ul>
+              <li>Unlimited product uploads</li>
+              <li>Unlimited ads</li>
+              <li>Featured placement + homepage banner</li>
+            </ul>
+            <button class="btn primary select-plan" data-plan="gold">Upgrade to Gold</button>
+          </div>
+        </div>
+
+        <div class="current-plan">
+          <h3>Your Current Plan: <span id="currentPlan">Free Tier</span></h3>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="tab-orders" class="tab-pane">
+        <h2>Orders for Your Products</h2>
+        <div id="ordersList" class="orders-list"></div>
+      </section>
+
+      <!-- FEEDBACKS -->
+      <section id="tab-feedbacks" class="tab-pane">
+        <h2>Feedbacks & Comments</h2>
+        <div id="feedbackList" class="feedback-list"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="tab-pane">
+        <h2>Seller Settings</h2>
+        <form id="settingsForm" class="form">
+          <label>Full Name <input id="sellerFullName" required /></label>
+          <label>Email <input id="contactEmail" type="email" required /></label>
+          <label>Phone <input id="contactPhone" type="tel" required /></label>
+          <label>Business Location <input id="businessLocation" required /></label>
+          <label>National ID <input id="nationalId" type="number" required /></label>
+          <label>Type of Business
+            <select id="businessType" required>
+              <option value="Retail">Retail</option>
+              <option value="Wholesale">Wholesale</option>
+              <option value="Service Provider">Service Provider</option>
+              <option value="Manufacturer">Manufacturer</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <div class="form-actions">
+            <button id="saveSettings" type="submit" class="btn primary">Save Settings</button>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="sd-footer">
+    <div id="home"><a href="./index.html">👉 Back To Homepage</a></div>
+    <div class="container">© 2025 MMUST MarketHub</div>
+  </footer>
+
+  <!-- ✅ IMAGE FALLBACK -->
+  <script>
+    document.addEventListener("error", (e) => {
+      if (e.target.tagName.toLowerCase() === "img") {
+        e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
+      }
+    }, true);
+  </script>
+
+  <!-- ✅ MAIN DASHBOARD SCRIPT -->
+  <script src="seller-dashboard.js"></script>
+</body>
+</html>

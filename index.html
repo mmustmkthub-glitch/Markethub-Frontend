@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MMUST MarketHub | Home</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+  <!-- Core CSS -->
+  <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+  <link type="text/css" rel="stylesheet" href="css/nobertwa.css">
+  <link type="text/css" rel="stylesheet" href="css/nouislider.min.css">
+  <link type="text/css" rel="stylesheet" href="css/slick.css">
+  <link type="text/css" rel="stylesheet" href="css/slick-theme.css">
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="img/mmustlogo.png">
+</head>
+
+
+<!-- 🔹 Chatbase AI Assistant Embed -->
+<script>
+  (function () {
+    if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+      window.chatbase = (...arguments) => {
+        if (!window.chatbase.q) window.chatbase.q = [];
+        window.chatbase.q.push(arguments);
+      };
+      window.chatbase = new Proxy(window.chatbase, {
+        get(target, prop) {
+          if (prop === "q") return target.q;
+          return (...args) => target(prop, ...args);
+        },
+      });
+    }
+    const onLoad = function () {
+      const script = document.createElement("script");
+      script.src = "https://www.chatbase.co/embed.min.js";
+      script.id = "nknOHDf_zqsKI0KULHTRb";  <!-- 👈 Use your Chatbase bot ID -->
+      script.domain = "www.chatbase.co";
+      document.body.appendChild(script);
+    };
+    if (document.readyState === "complete") {
+      onLoad();
+    } else {
+      window.addEventListener("load", onLoad);
+    }
+  })();
+</script>
+
+
+
+
+<body>
+
+
+  <!-- MAIN HEADER -->
+  <div id="header">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- LOGO -->
+        <div class="col-md-3 col-12">
+          <div class="header-logo">
+            <a href="index.html" class="logo">
+              <img src="img/mmustlogo.png" alt="MMUST MarketHub Logo" style="max-height: 60px;">
+            </a>
+          </div>
+        </div>
+        <!-- /LOGO -->
+
+        <!-- SEARCH BAR -->
+        <div class="col-md-6 col-12">
+          <div class="header-search">
+            <form id="home-search-form">
+              <select class="input-select" id="home-category">
+                <option value="all">All Categories</option>
+                <option value="Clothes">Clothes</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Food">Food</option>
+                <option value="Services">Services</option>
+                <option value="Furniture">Furniture</option>
+
+              </select>
+              <input class="input" id="home-search" placeholder="Search here...">
+              <button type="submit" class="search-btn">Search</button>
+            </form>
+          </div>
+        </div>
+        <!-- /SEARCH BAR -->
+            <!-- ACCOUNT & CART -->
+            <div class="col-md-3 col-12 text-right">
+              <div class="header-ctn">
+                <div class="mobile-only-register">
+                  <a  id="openSignupModal" ><i class="fa fa-user-circle"></i> Register<span></span></a>
+                </div>
+                <div class="dropdown">
+                  <a href="cart.html">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>Your Cart</span>
+                    <div class="qty" id="cart-count">0</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- /ACCOUNT & CART -->
+      </div>
+    </div>
+  </div>
+  <!-- /MAIN HEADER -->
+  </header>
+  <!-- /HEADER -->
+
+  <!-- NAVIGATION MENU -->
+  <nav id="navigation">
+    <div class="container">
+      <ul class="main-nav nav navbar-nav">
+        <li class="active"><a href="index.html">Home</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="seller-ads.html">Premium Ads</a></li>
+        <li><a href="contact-us.html">Contact Us</a></li>
+        <li><a href="seller-dashboard.html">Seller Dashboard</a></li>
+        <li><a href="myorders.html">Buyer Dashboard</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- /NAVIGATION MENU -->
+
+  <!-- HERO SECTION -->
+  <div id="hot-deal" class="section">
+    <div class="container text-center">
+      <h2 class="text-uppercase">Welcome to MMUST MarketHub</h2>
+      <p>Buy, sell, and connect within the MMUST community — students, staff, and local businesses.</p>
+      <a class="primary-btn cta-btn" href="marketplace.html">Explore Marketplace</a>
+    </div>
+  </div>
+  <!-- /HERO SECTION -->
+
+  <!-- CATEGORY SECTION -->
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <!-- Electronics -->
+        <div class="col-md-3 col-sm-6">
+          <div class="shop">
+            <div class="shop-img"><img src="img/shop01.png" alt=""></div>
+            <div class="shop-body">
+              <h3>Electronics</h3>
+              <a href="marketplace.html?category=Electronics" class="cta-btn">Shop Now <i
+                  class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- Clothes -->
+        <div class="col-md-3 col-sm-6">
+          <div class="shop">
+            <div class="shop-img"><img src="img/shop02.png" alt=""></div>
+            <div class="shop-body">
+              <h3>Clothes</h3>
+              <a href="marketplace.html?category=Clothes" class="cta-btn">Shop Now <i
+                  class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- Food -->
+        <div class="col-md-3 col-sm-6">
+          <div class="shop">
+            <div class="shop-img"><img src="img/shop03.png" alt=""></div>
+            <div class="shop-body">
+              <h3>Food</h3>
+              <a href="marketplace.html?category=Food" class="cta-btn">Shop Now <i
+                  class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- Services -->
+        <div class="col-md-3 col-sm-6">
+          <div class="shop">
+            <div class="shop-img"><img src="img/shop03.png" alt=""></div>
+            <div class="shop-body">
+              <h3>Food</h3>
+              <a href="marketplace.html?category=Food" class="cta-btn">Shop Now <i
+                  class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /CATEGORY SECTION -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketHub | Top Listings</title>
+
+    <!-- ====== STYLES ====== -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/slick-theme.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- ===========================
+         🛍️ TOP LISTINGS SECTION
+    ============================ -->
+    <div class="section">
+        <div class="container">
+            <div class="row">
+
+                <!-- Section Title -->
+                <div class="col-md-12">
+                    <div class="section-title">
+                        <h3 class="title">Top Listings</h3>
+                        <div class="section-nav">
+                            <ul class="section-tab-nav tab-nav">
+                                <li class="active"><a href="#">Clothes</a></li>
+                                <li><a href="#">Electronics</a></li>
+                                <li><a href="#">Food</a></li>
+                                <li><a href="#">Services</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Container -->
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="products-tabs">
+                            <!-- Product Tab -->
+                            <div id="tab1" class="tab-pane active">
+                                <div class="products-slick" data-nav="#slick-nav-1">
+                                    <!-- Products will be injected here by JS -->
+                                </div>
+                                <div id="slick-nav-1" class="products-slick-nav"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </div><!-- /section -->
+
+    <!-- ===========================
+         🔧 SCRIPTS
+    ============================ -->
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/slick.min.js"></script>
+    <script src="./js/top-listings.js"></script>
+</body>
+</html>
+
+
+  <!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="newsletter">
+          <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+          
+          <!-- Newsletter Form -->
+          <form id="newsletter-form">
+            <input 
+              id="newsletter-email" 
+              class="input" 
+              type="email" 
+              placeholder="Enter Your Email" 
+              required
+            >
+            <button class="newsletter-btn" type="submit">
+              <i class="fa fa-envelope"></i> Subscribe
+            </button>
+          </form>
+
+          <!-- Feedback Result -->
+          <div id="newsletter-result" style="margin-top:10px;"></div>
+
+          <!-- Social Links -->
+          <ul class="newsletter-follow">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+            <li><a href="#"><i class="fa fa-whatsapp"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <!-- top footer -->
+    <div class="section">
+      <!-- container -->
+      <div class="container">
+        <!-- row -->
+        <div class="row">
+          <div class="col-md-3 col-xs-6">
+            <div class="footer">
+              <h3 class="footer-title">About Us</h3>
+              <p></p>
+              <ul class="footer-links">
+                <li><a href="#"><i class="fa fa-map-marker"></i>2188 Sichirai Road</a></li>
+                <li><a href="#"><i class="fa fa-phone"></i>+254-793-798-993</a></li>
+                <li><a href="#"><i class="fa fa-envelope-o"></i>mmustmkthub@gmail.com</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-6">
+            <div class="footer">
+              <h3 class="footer-title">Categories</h3>
+              <ul class="footer-links">
+                <li><a href="marketplace.html?category=Clothes">Clothes</a></li>
+                <li><a href="marketplace.html?category=Electronics">Electronics</a></li>
+                <li><a href="marketplace.html?category=Food">Food</a></li>
+                <li><a href="marketplace.html?category=Services">Services</a></li>
+                <li><a href="#">Accessories</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="clearfix visible-xs"></div>
+
+          <div class="col-md-3 col-xs-6">
+            <div class="footer">
+              <h3 class="footer-title">Information</h3>
+              <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about-us.html">About Us</a></li>
+                <li><a href="contact-us.html">Contact Us</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="seller-dashboard.html">Seller Dashboard</a></li>
+                <li><a href="terms.html">Terms & Conditions</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-6">
+            <div class="footer">
+              <h3 class="footer-title">Service</h3>
+              <ul class="footer-links">
+                <li><a href="seller-dashboard.html">My Account</a></li>
+                <li><a href="cart.html">View Cart</a></li>
+                <li><a href="myorders.html">My Order</a></li>
+                <li><a href="myorders.html">Track My Order</a></li>
+                <li><a href="contact-us.html">Help</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+    </div>
+    <!-- /top footer -->
+  </footer>
+  <!-- /FOOTER -->
+
+
+   <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <div id="signupFormContent">
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JS FILES -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.zoom.min.js"></script>
+  <script src="js/nouislider.min.js"></script>
+  <script src="js/slick.min.js"></script>
+  <script src="js/nobertwa.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/home.newsletter.js"> </script>
+
+  <script>
+    // Load Cart Count
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    document.getElementById("cart-count").textContent = storedCart.length;
+
+    // Redirect search
+    const searchForm = document.getElementById("home-search-form");
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = document.getElementById("home-search").value.trim();
+      const category = document.getElementById("home-category").value;
+      window.location.href = `marketplace.html?search=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`;
+    });
+  </script>
+</body>
+
+</html>

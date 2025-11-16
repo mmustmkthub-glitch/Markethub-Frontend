@@ -1,0 +1,31 @@
+
+body{
+    background-color: #FFFBF3;
+    min-height: 100vh;
+    padding: 30px;
+    margin: 0;
+    font-family: "Inter";
+    
+}
+
+.terms_conditions{
+    padding: 10px;
+    background-color: white;
+    border: 1px, solid #FFA800;
+    border-radius: 10px;
+}
+
+h1{
+    text-align: center;
+    color: #5a5a5a;
+}
+
+h3{
+    color: #5a5a5a;
+}
+p{
+    font-size: 15px;
+}
+ul{
+    font-size: 15px;
+}

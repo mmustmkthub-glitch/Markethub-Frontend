@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MMUST MarketHub — Advertisements</title>
+  <link rel="stylesheet" href="seller-ads.css" />
+</head>
+<body>
+  
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">MMUST MarketHub — Sponsored Ads</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="seller-dashboard.html">Seller Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ===== FEATURED ROTATING BANNER ===== -->
+    <section id="bannerSection" class="banner-section">
+      <button id="prevSlide" class="banner-btn">&#10094;</button>
+      <div id="bannerInner" class="banner-inner">
+        <!-- Rotating banner slides injected here -->
+      </div>
+      <button id="nextSlide" class="banner-btn">&#10095;</button>
+    </section>
+
+    <!-- ===== INTRO SECTION ===== -->
+    <section class="intro">
+      <h2>Featured Advertisement Campaigns</h2>
+      <p>
+        Discover trending offers, sponsored promotions, and community campaigns
+        from verified sellers and businesses.
+      </p>
+    </section>
+
+    <!-- ===== AD LIST SECTION ===== -->
+    <section id="adsSection" class="ads-grid">
+      <!-- Ads will load dynamically here -->
+    </section>
+  </main>
+
+  <!-- 🟢 Modal Popup for Ad Details -->
+  <div id="adModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <img id="modalBanner" src="" alt="Ad Banner" />
+      <div class="modal-details">
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
+        <p><strong>Target:</strong> <span id="modalTarget"></span></p>
+        <p><strong>Duration:</strong> <span id="modalDuration"></span> days</p>
+        <p><strong>Budget:</strong> KES <span id="modalBudget"></span></p>
+        <a href="marketplace.html" class="btn">Shop Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      © 2025 MMUST MarketHub — All rights reserved
+    </div>
+  </footer>
+
+  <!-- ===== JS ===== -->
+  <script src="seller-ads.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard - MMUST MarketHub</title>
+  <link rel="stylesheet" href="myorders.css" />
+</head>
+
+<body>
+  <header>
+    <h1>📦 MMUST MarketHub Dashboard</h1>
+    <nav>
+      <ul>
+        <li class="active" data-tab="orders">My Orders</li>
+        <li data-tab="track">Track Orders</li>
+        <li data-tab="comments">Leave Comments</li>
+        <li data-tab="contact">Contact Seller</li>
+        <li data-tab="details">My Details</li>
+
+        <!-- 🛍️ Back to Marketplace -->
+        <li>
+          <a href="marketplace.html" class="back-link">← Back to Marketplace</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 🧾 My Orders -->
+    <section id="orders" class="tab-content active">
+      <h2>🧾 My Orders</h2>
+      <form id="search-form">
+        <input type="text" id="buyer-name" placeholder="Enter your name" required />
+        <button type="submit">Search Orders</button>
+      </form>
+      <div id="orders-container"></div>
+    </section>
+
+    <!-- 🚚 Track Orders -->
+    <section id="track" class="tab-content">
+      <h2>🚚 Track My Orders</h2>
+      <p>Enter your name below to track your order status.</p>
+      <input type="text" id="track-buyer-name" placeholder="Enter Your Name" />
+      <button id="track-btn">Track</button>
+      <div id="track-result"></div>
+    </section>
+
+   <!-- 💬 Leave Comments -->
+<section id="comments" class="tab-content">
+  <h2>💬 Leave a Comment</h2>
+
+  <form id="feedback-form">
+    <label>
+      Name:
+      <input type="text" id="feedback-name" placeholder="Your Name" required>
+    </label>
+    <br>
+
+    <label>
+      Email:
+      <input type="email" id="feedback-email" placeholder="you@example.com" required>
+    </label>
+    <br>
+
+    <label>
+      Message:
+      <textarea id="feedback-message" placeholder="Write your feedback here..." required></textarea>
+    </label>
+    <br>
+
+    <label>
+      Rating:
+      <select id="feedback-rating" required>
+        <option value="">Select Rating</option>
+        <option value="1">1 - Poor</option>
+        <option value="2">2 - Fair</option>
+        <option value="3">3 - Good</option>
+        <option value="4">4 - Very Good</option>
+        <option value="5">5 - Excellent</option>
+      </select>
+    </label>
+    <br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="comment-result"></div>
+</section>
+
+
+
+    <!-- 📞 Contact Seller -->
+    <section id="contact" class="tab-content">
+      <h2>📞 Contact Seller</h2>
+      <form id="contact-form">
+        <input type="text" id="seller-name" placeholder="Seller Name" required />
+        <textarea id="message" placeholder="Your message..." required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+      <div id="contact-result"></div>
+    </section>
+
+    <!-- 👤 My Personal Details -->
+    <section id="details" class="tab-content">
+      <h2>👤 My Details</h2>
+      <form id="details-form">
+        <input type="text" id="user-name" placeholder="Full Name" required />
+        <input type="email" id="user-email" placeholder="Email" required />
+        <input type="text" id="user-phone" placeholder="Phone" required />
+        <input type="text" id="user-location" placeholder="Location" required />
+        <input type="text" id="user-id" placeholder="ID Number" required />
+        <button type="submit">Update</button>
+      </form>
+      <div id="details-result"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 MMUST MarketHub. All rights reserved.</p>
+  </footer>
+
+  <script src="myorders.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+You said:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | MMUST MarketHub</title>
+
+  <!-- Link to shared site stylesheet -->
+  <link rel="stylesheet" href="marketplace.css" />
+</head>
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <a href="cart.html" class="back-btn">← Back to Cart</a>
+    <h1>🧾 Complete Your Order</h1>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="cart-container">
+
+    <!-- ========== BUYER DETAILS FORM ========== -->
+    <section class="order-section">
+      <h2>Buyer Information</h2>
+
+      <form id="buyer-form" class="order-form">
+        <div class="form-group">
+          <label for="buyer-name">Full Name:</label>
+          <input type="text" id="buyer-name" placeholder="e.g. John Doe" required />
+        </div>
+
+        <div class="form-group">
+          <label for="buyer-phone">Phone Number:</label>
+          <input type="tel" id="buyer-phone" placeholder="e.g. 07XXXXXXXX" required />
+        </div>
+
+        <div class="form-group">
+          <label for="buyer-address">Delivery Address:</label>
+          <input type="text" id="buyer-address" placeholder="e.g. MMUST Hostel B5" required />
+        </div>
+
+        <div class="form-group">
+          <label for="payment-method">Payment Method:</label>
+          <select id="payment-method" required>
+            <option value="">-- Select Payment Method --</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="M-PESA">M-PESA</option>
+          </select>
+        </div>
+
+        <!-- ========== DELIVERY OPTION ========== -->
+        <div class="form-group">
+          <label for="delivery-option">Delivery Option:</label>
+          <select id="delivery-option" required>
+            <option value="">-- Select Delivery Option --</option>
+            <option value="Pickup at Campus" data-fee="0">Pickup at Campus (Free)</option>
+            <option value="Within MMUST" data-fee="50">Within MMUST (KES 50)</option>
+            <option value="Kakamega Town" data-fee="100">Kakamega Town (KES 100)</option>
+          </select>
+        </div>
+
+        <button type="submit" id="confirm-order">✅ Confirm Order</button>
+      </form>
+    </section>
+
+    <!-- ========== ORDER SUMMARY ========== -->
+    <section id="order-summary">
+      <h2>Order Summary</h2>
+
+      <table id="order-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price (KES)</th>
+            <th>Seller</th>
+          </tr>
+        </thead>
+        <tbody id="order-items"></tbody>
+      </table>
+
+      <div class="cart-summary">
+        <h4>Subtotal: KES <span id="order-subtotal">0</span></h4>
+        <h4>Delivery Fee: KES <span id="delivery-fee">0</span></h4>
+        <h3>Total: KES <span id="order-total">0</span></h3>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <p>&copy; 2025 MMUST MarketHub — Empowering Student Commerce</p>
+  </footer>
+
+  <!-- ================= SCRIPT ================= -->
+  <script src="order.js"></script>
+</body>
+</html>

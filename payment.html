@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay with Paystack</title>
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="payment.css">
+</head>
+<body>
+  <div class="payment-container">
+    <h2>Pay with Paystack</h2>
+    <input type="text" id="fullname" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="number" id="amount" placeholder="Amount (NGN)" required>
+    <button id="payButton">Pay Now</button>
+  </div>
+
+  <!-- Paystack JS -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <!-- Link your external JS -->
+  <script src="payment.js"></script>
+</body>
+</html>
