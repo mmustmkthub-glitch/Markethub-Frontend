@@ -5,7 +5,7 @@
 ========================================================= */
 
 const BASE_API = "https://mmustmkt-hub.onrender.com/api";
-const API_PRODUCTS = `${BASE_API}/products/`;
+const resp = await fetch(`${API_PRODUCTS}?${params}`);
 const API_ORDERS_SELLER = `${BASE_API}/orders/mine/`;
 const API_ADS = `${BASE_API}/ads/`;
 const API_FEEDBACKS = `${BASE_API}/feedbacks/`;
