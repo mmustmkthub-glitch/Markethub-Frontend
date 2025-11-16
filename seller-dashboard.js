@@ -182,7 +182,7 @@ document.querySelectorAll(".sd-sidebar nav ul li").forEach(li => {
   });
 });
 
-// ---------- Products ----------
+/// ---------- Products ----------
 let productsPage = 1;
 
 async function loadProducts(page = 1, q = "", category = "all") {
@@ -194,7 +194,9 @@ async function loadProducts(page = 1, q = "", category = "all") {
     if (q) params.set("search", q);
     if (category !== "all") params.set("category", category);
 
-    const resp = await fetch(`${API_PRODUCTS}?${params}`, { headers: authHeaders(false) });
+    // 🚀 REMOVE AUTH HEADERS – Public endpoint!
+    const resp = await fetch(`${API_PRODUCTS}?${params}`);
+
     if (!resp.ok) throw new Error(`Server ${resp.status}`);
     const data = await safeJson(resp);
     const items = toArrayMaybe(data);
@@ -216,88 +218,6 @@ async function loadProducts(page = 1, q = "", category = "all") {
     grid.innerHTML = `<p class="error">Failed to load products: ${err.message}</p>`;
   }
 }
-
-function productCardHtml(p) {
-  const img = p.image || p.image_url || FALLBACK_IMAGE;
-  return `
-    <div class="product-item card">
-      <img src="${img}" alt="${escapeHtml(p.name)}"
-        onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
-      <h4>${escapeHtml(p.name)}</h4>
-      <p>KSh ${parseFloat(p.price || 0).toLocaleString()}</p>
-      <p>${escapeHtml(p.location || "")}</p>
-      <div class="card-actions">
-        <button data-edit="${p.id}" class="btn">Edit</button>
-        <button data-delete="${p.id}" class="btn danger">Delete</button>
-      </div>
-    </div>`;
-}
-
-async function handleProductForm(e) {
-  e.preventDefault();
-  if (!canUploadProduct()) return;
-
-  const id = document.getElementById("productId").value || null;
-  const fd = new FormData();
-  fd.append("name", document.getElementById("productName").value.trim());
-  fd.append("category", document.getElementById("productCategory").value);
-  fd.append("price", document.getElementById("productPrice").value);
-  fd.append("location", document.getElementById("productLocation").value.trim());
-  fd.append("description", document.getElementById("productDescription").value.trim());
-  const file = document.getElementById("productImage")?.files[0];
-  if (file) fd.append("image", file);
-
-  try {
-    const method = id ? "PUT" : "POST";
-    const url = id ? `${API_PRODUCTS}${id}/` : API_PRODUCTS;
-    const resp = await fetch(url, { method, headers: authHeaders(false), body: fd });
-    const data = await safeJson(resp);
-    if (!resp.ok) throw new Error(JSON.stringify(data));
-
-    showMessage("#productsGrid", "✅ Product saved successfully.");
-    e.target.reset();
-    document.getElementById("productId").value = "";
-    loadProducts(productsPage);
-  } catch (err) {
-    console.error("handleProductForm:", err);
-    showMessage("#productsGrid", `❌ Error saving product: ${err.message}`, true);
-  }
-}
-
-function canUploadProduct() {
-  const limit = getPlanLimits(currentPlan).maxProducts;
-  const count = document.querySelectorAll(".product-item").length;
-  if (count >= limit) {
-    alert(`🚫 Limit of ${limit} products for ${currentPlan.toUpperCase()} plan reached.`);
-    return false;
-  }
-  return true;
-}
-
-function startEditProduct(p) {
-  document.getElementById("productId").value = p.id || p.pk;
-  document.getElementById("productName").value = p.name || "";
-  document.getElementById("productCategory").value = p.category || "";
-  document.getElementById("productPrice").value = p.price || "";
-  document.getElementById("productLocation").value = p.location || "";
-  document.getElementById("productDescription").value = p.description || "";
-  document.querySelector('[data-tab="create"]').click();
-}
-
-async function deleteProduct(id) {
-  if (!confirm("Delete this product?")) return;
-  try {
-    const resp = await fetch(`${API_PRODUCTS}${id}/`, { method: "DELETE", headers: authHeaders() });
-    if (!resp.ok) throw new Error(`Server ${resp.status}`);
-    showMessage("#productsGrid", "🗑️ Product deleted.");
-    loadProducts(productsPage);
-  } catch (err) {
-    console.error("deleteProduct:", err);
-    showMessage("#productsGrid", `Delete failed: ${err.message}`, true);
-  }
-}
-
-document.getElementById("productForm")?.addEventListener("submit", handleProductForm);
 
 // ---------- Ads ----------
 async function loadAds() {
