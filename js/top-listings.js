@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const productsContainer = document.querySelector(".products-slick");
 
     // ✅ Your live API endpoint
-    const API_URL = "http://127.0.0.1:8000/api/toplistings/";
+    const API_URL = "https://mmustmkt-hub.onrender.com/api/toplistings/";
 
     // Default category on load
     let currentCategory = "Electronics";
