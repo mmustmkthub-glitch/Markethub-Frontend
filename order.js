@@ -2,7 +2,7 @@
 // 🛒 MMUST MarketHub - order.js (FINAL v10)
 // ================================
 
-const API_URL = "http://127.0.0.1:8000/api/orders/";
+const API_URL = "https://mmustmkt-hub.onrender.com/api/orders/";
 
 // =======================
 // 📦 DOM ELEMENTS
