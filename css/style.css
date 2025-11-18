@@ -434,9 +434,13 @@ textarea.input {
   border-radius: 40px 0px 0px 40px;
 }
 
-.header-search form .input {
+.header-search .search-homepage .input-search {
   width: calc(100% - 260px);
   margin-right: -4px;
+  background-color: #fff;
+  height: 40px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 
 .header-search form .search-btn {
