@@ -2396,4 +2396,16 @@ label{
   border-bottom-left-radius: 10px;
 }
 
+* Fixing the close button in mobile view*/
+@media only screen and (max-width: 991px) {
+  .close-button{
+    right: 30px;
+    border-top-right-radius: 10px;
+  }
+  
+}
 
+/*adding cursor on register*/
+#openSignupModal{
+  cursor: pointer;
+}
