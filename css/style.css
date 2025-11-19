@@ -2399,7 +2399,6 @@ label{
 }
 
 
-
 /* Media query for screens smaller than 768px (Mobile View) */
 @media (max-width: 767.98px) {
     /* ------------------------------------------------------------- */
@@ -2471,7 +2470,21 @@ label{
     .row.align-items-center > .col-md-6:nth-child(2) {
         width: 100%; 
         order: 3; 
-        padding: 0; 
+        
+        /* CRITICAL FIXES BELOW */
+        
+        /* 1. Negate the parent's padding-left (54px) by moving the column LEFT by 54px */
+        margin-left: -54px; 
+        
+        /* 2. Compensate for the column's increased width that went off-screen */
+        width: calc(100% + 54px);
+        
+        /* 3. Re-introduce desired padding on the left (e.g., 10px) */
+        padding-left: 10px; 
+        
+        /* Ensure no extra padding on the right */
+        padding-right: 0; 
+        
         margin-top: 10px;
     }
 
@@ -2501,7 +2514,16 @@ label{
       padding: 0 !important;
       margin: 0 !important;
     }
+    .header-search .search-homepage .input-search {
+  width: 68%;
+  margin-right: -4px;
+  background-color: #fff;
+  height: 40px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
+}
+
 
 /*=========================================================
 	10 -> NEWSLETTER
