@@ -2400,83 +2400,107 @@ label{
 
 
 
-/* Media query for screens smaller than 768px (Mobile View) */
 @media (max-width: 767.98px) {
-    /* Target the parent of the columns */
+    /* ------------------------------------------------------------- */
+    /* 1. ROW CONTAINER ( The "Push" ) */
+    /* ------------------------------------------------------------- */
+    
     .row.align-items-center {
-        /* Enable Flexbox for better ordering and wrapping */
         display: flex;
         flex-wrap: wrap; 
-        gap: 5px;
+        gap: 0px; 
+        
+        /* CRITICAL CHANGE: This space is now controlled by flexbox, 
+           so we use this padding solely for the menu toggle space. */
+        /* Currently 30px, adjust this value to control the space BEFORE the logo. */
+        padding-left: 48px; 
+        
+        /* CRITICAL CHANGE: Remove padding-right here so the icons can move to the screen edge */
+        padding-right: 0px; 
+        
+        /* This tells the items to pack to the left, removing the center gap */
+        justify-content: flex-start; 
     }
 
-    /* 1. Logo (First item in HTML, needs 50% width) */
+    /* ------------------------------------------------------------- */
+    /* 2. LOGO COLUMN ( The "Snap" ) */
+    /* ------------------------------------------------------------- */
+
     .row.align-items-center > .col-md-3:nth-child(1) {
-        width: calc(60%-2.5px);
-        order: 1; /* Keep it on the first line, left side */
-        padding-left: 5px;
-        padding-right: 0px;
-        margin-right: 0px;
+        /* Logo column is set to width: auto and order: 1 */
+        width: auto; 
+        order: 1; 
+        padding: 0;
+        margin: 0;
     }
 
-    /* 2. Account/Cart (Third item in HTML, needs 50% width, moved to right side) */
+    /* Logo Image Specifics */
+    .header-logo .logo img {
+        max-width: 100px !important;
+        height: 70px;
+        margin: 0 !important;
+        display: block;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* 3. ACCOUNT/CART COLUMN ( Tighter Right Alignment ) */
+    /* ------------------------------------------------------------- */
+
     .row.align-items-center > .col-md-3:nth-child(3) {
-        width: calc(40%-2.5px);
-        order: 1; /* Keep it on the first line, right side */
-        padding-left:0 ;
-        padding-right: 0px;
+        width: auto; 
+        order: 2; 
+        padding: 0;
+        
+        /* Adjust this to control the specific gap between Logo and Register */
+        margin-left: 4px; /* Added a 15px gap back in for separation */
+        
         display: flex;
-        justify-content: flex-end;
+        /* CRITICAL CHANGE: Force content to the right edge of this column */
+        justify-content: flex-end; 
+        
+        /* CRITICAL CHANGE: Remove any column padding/margin on the right */
+        padding-right: 0 !important;
+        margin-right: 0 !important;
     }
 
-    .row.align-items-center > .col-md-3:nth-child(3) > div {
-        /* Reduce the horizontal margin to bring the two elements closer together */
-        margin-left: 5px; /* Controls the gap between Register and Cart */
-        margin-right: 5px;
-    }
+    /* ------------------------------------------------------------- */
+    /* 4. SEARCH BAR ( Force New Line ) */
+    /* ------------------------------------------------------------- */
 
-    /* 3. Search Bar (Second item in HTML, moves to the second line, full width) */
     .row.align-items-center > .col-md-6:nth-child(2) {
-        width: 100%; /* Take full width on the new line */
-        order: 2; /* Force it to the second line */
-    }
-
-    .header-ctn>div>a>span {
-       font-size: 10px;
+        width: 100%; 
+        order: 3; 
+        padding: 0; 
+        margin-top: 10px;
     }
 
-    .header-logo .logo img{
-      margin-left: 13px;
-      margin-right: 0;
-      padding-right: 0;
-      padding-left: 0;
-
-
-    }
-
-    .header-ctn>div+div {
-  margin-left: 0px;
-  margin-right: 0px;
-}
+    /* ------------------------------------------------------------- */
+    /* 5. CLEANUP (Removing inner spacing) */
+    /* ------------------------------------------------------------- */
     
-
-    .header-logo .logo img{
-      max-width: 100px !important;
-      z-index: 999;
-      height: 70px;
-
+    .header-ctn {
+        /* CRITICAL CHANGE: Ensure this container has no right spacing */
+        margin-right: 0 !important; 
+        padding-right: 0 !important;
+        gap: 0;
     }
-    .header-ctn{
-      display: flex;
-      justify-content: flex-start;
-      gap: 0px;
-      
+    
+    /* Spacing between Register and Cart icons */
+    .row.align-items-center > .col-md-3:nth-child(3) > div {
+        margin-left: 6px; 
+        margin-right: 0px !important; /* CRITICAL: Ensure the rightmost element has NO margin */
     }
 
-
-
+    .header-ctn > div > a > span {
+        font-size: 10px;
+    }
+    
+    /* Reset default margins on elements */
+    .mobile-only-register, .dropdown, .header-ctn .dropdown {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
 }
-
 
 /*=========================================================
 	10 -> NEWSLETTER
