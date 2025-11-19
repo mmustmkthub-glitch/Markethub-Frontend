@@ -2413,7 +2413,7 @@ label{
         /* CRITICAL CHANGE: This space is now controlled by flexbox, 
            so we use this padding solely for the menu toggle space. */
         /* Currently 30px, adjust this value to control the space BEFORE the logo. */
-        padding-left: 48px; 
+        padding-left: 54px; 
         
         /* CRITICAL CHANGE: Remove padding-right here so the icons can move to the screen edge */
         padding-right: 0px; 
