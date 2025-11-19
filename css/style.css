@@ -2525,6 +2525,64 @@ label{
 }
 
 
+
+/* FIXING THE MENU TOGGLE FOR MOBILE VIEW*/
+@media only screen and (max-width: 991px){
+  
+
+  .header-container .container-nav{
+    position: absolute;
+    background: #E9ECEF;
+    height: 100vh;
+    width: 200px;
+    top: 0;
+    left: -200px;
+    z-index: 2;
+    transition: 0.9s;
+    padding-top: 50px;
+  }
+  .header-container .container-nav .fa{
+    display: block;
+    color: #495057;
+    cursor: pointer;
+    margin: 10px;
+    font-size: 22px;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+
+.header-container .fa.fa-bars{
+    display: block;
+    color: white;
+    cursor: pointer;
+    margin: 0px;
+    font-size: 24px;
+    position: absolute;
+    top: 35px;
+    left: 10px;
+    z-index: 999;
+
+}
+
+/* Hide Home in Mobile view*/
+
+#navLinks li.hide-on-mobile{
+    display: none;
+  }
+
+
+  .header-container .container-nav a.active {
+  border-bottom: none;
+}
+
+ 
+
+}
+
+
+
 /*=========================================================
 	10 -> NEWSLETTER
 ===========================================================*/
