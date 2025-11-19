@@ -2400,6 +2400,7 @@ label{
 
 
 
+/* Media query for screens smaller than 768px (Mobile View) */
 @media (max-width: 767.98px) {
     /* ------------------------------------------------------------- */
     /* 1. ROW CONTAINER ( The "Push" ) */
@@ -2436,7 +2437,7 @@ label{
 
     /* Logo Image Specifics */
     .header-logo .logo img {
-        max-width: 100px !important;
+        max-width: 110px !important;
         height: 70px;
         margin: 0 !important;
         display: block;
@@ -2452,7 +2453,7 @@ label{
         padding: 0;
         
         /* Adjust this to control the specific gap between Logo and Register */
-        margin-left: 4px; /* Added a 15px gap back in for separation */
+        margin-left: 0px; /* Added a 15px gap back in for separation */
         
         display: flex;
         /* CRITICAL CHANGE: Force content to the right edge of this column */
@@ -2487,7 +2488,7 @@ label{
     
     /* Spacing between Register and Cart icons */
     .row.align-items-center > .col-md-3:nth-child(3) > div {
-        margin-left: 6px; 
+        margin-left: 0px; 
         margin-right: 0px !important; /* CRITICAL: Ensure the rightmost element has NO margin */
     }
 
