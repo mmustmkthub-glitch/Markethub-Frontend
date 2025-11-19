@@ -2538,7 +2538,7 @@ label{
   
 
   .header-container .container-nav{
-    position: absolute;
+    position: fixed;
     background: #E9ECEF;
     height: 100vh;
     width: 200px;
