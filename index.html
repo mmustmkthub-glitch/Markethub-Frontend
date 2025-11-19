@@ -68,7 +68,9 @@
 
 
   <!-- MAIN HEADER -->
+<div class="header-container">
   <div id="header">
+    <i class="fa fa-bars" onclick="showMenu()"></i>
     <div class="container">
       <div class="row align-items-center">
         <!-- LOGO -->
@@ -118,7 +120,8 @@
 
   <!-- NAVIGATION MENU -->
   <nav id="navigation">
-    <div class="container">
+    <div class="container container-nav" id="navLinks">
+      <i class="fa fa-times" onclick="hideMenu()"></i>
       <ul class="main-nav nav navbar-nav">
         <li class="active"><a href="index.html">Home</a></li>
         <li><a href="about-us.html">About Us</a></li>
@@ -131,6 +134,7 @@
     </div>
   </nav>
   <!-- /NAVIGATION MENU -->
+</div>
 
   <!-- HERO SECTION -->
   <div id="hot-deal" class="section">
@@ -387,6 +391,21 @@
       </div>
     </div>
   </div>
+
+
+  <!--Navigation Bar-->
+  <script>
+    var navLinks = document.getElementById("navLinks");
+    /* creating the functions for opening and closing the navigation bars*/
+
+    function showMenu() {
+      navLinks.style.left = "0";
+    }
+
+    function hideMenu() {
+      navLinks.style.left = "-200px";
+    }
+  </script>
 
 
   <!-- JS FILES -->
