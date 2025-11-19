@@ -137,6 +137,105 @@ body {
   color: #000;
 }
 
+ /* ==============================
+   CONTACT DETAILS (NEW SECTION)
+============================== */
+
+.contact-details-section {
+  padding: 70px 0;
+  background-color: #f9f9f9;
+}
+
+.contact-details-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 45px;
+  border-radius: 18px;
+  border-top: 6px solid #ffcc00;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.contact-details-card h3 {
+  font-weight: 700;
+  margin-bottom: 35px;
+  font-size: 1.8rem;
+  color: #000;
+}
+
+.contact-details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.contact-item {
+  background: #fff;
+  padding: 25px 15px;
+  border-radius: 14px;
+  border: 1.5px solid #eee;
+  transition: 0.3s ease;
+}
+
+.contact-item:hover {
+  border-color: #ffcc00;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);
+}
+
+.contact-item i {
+  font-size: 2rem;
+  color: #ffcc00;
+  margin-bottom: 12px;
+}
+
+.contact-item h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+.contact-item p {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ==============================
+   RESPONSIVE (CONTACT DETAILS)
+============================== */
+
+@media (max-width: 992px) {
+  .contact-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .contact-details-card {
+    padding: 30px;
+  }
+
+  .contact-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-item {
+    padding: 20px 10px;
+  }
+}
+
+
+  .btn-send {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==============================
+   RESPONSIVE (CONTACT DETAILS)
+============================== */
+
 /* ==============================
    NEWSLETTER SECTION
 ============================== */
@@ -255,97 +354,4 @@ body {
     height: 300px;
   }
 
-   /* ==============================
-   CONTACT DETAILS (NEW SECTION)
-============================== */
-
-.contact-details-section {
-  padding: 70px 0;
-  background-color: #f9f9f9;
-}
-
-.contact-details-card {
-  max-width: 900px;
-  margin: 0 auto;
-  background: #fff;
-  padding: 45px;
-  border-radius: 18px;
-  border-top: 6px solid #ffcc00;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
-  text-align: center;
-}
-
-.contact-details-card h3 {
-  font-weight: 700;
-  margin-bottom: 35px;
-  font-size: 1.8rem;
-  color: #000;
-}
-
-.contact-details-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-}
-
-.contact-item {
-  background: #fff;
-  padding: 25px 15px;
-  border-radius: 14px;
-  border: 1.5px solid #eee;
-  transition: 0.3s ease;
-}
-
-.contact-item:hover {
-  border-color: #ffcc00;
-  box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);
-}
-
-.contact-item i {
-  font-size: 2rem;
-  color: #ffcc00;
-  margin-bottom: 12px;
-}
-
-.contact-item h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #000;
-}
-
-.contact-item p {
-  color: #444;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-/* ==============================
-   RESPONSIVE (CONTACT DETAILS)
-============================== */
-
-@media (max-width: 992px) {
-  .contact-details-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .contact-details-card {
-    padding: 30px;
-  }
-
-  .contact-details-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-item {
-    padding: 20px 10px;
-  }
-}
-
-
-  .btn-send {
-    font-size: 0.9rem;
-  }
-}
+  
