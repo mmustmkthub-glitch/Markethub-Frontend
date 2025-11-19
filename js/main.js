@@ -132,7 +132,7 @@ function attachAuthHandlers($container) {
 
                 alert("✅ Login Successful!");
                 $modal.hide();
-                window.location.href = (result.role || "buyer") === "seller" ? "seller-dashboard.html" : "order.html";
+                window.location.href = (result.role || "buyer") === "seller" ? "https://mmustmkt-hub.onrender.com/admin" : "order.html";
             } else {
                 alert("❌ Sign In failed: " + (result.detail || "Invalid credentials."));
                 console.error(result);
