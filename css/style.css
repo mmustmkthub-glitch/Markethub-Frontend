@@ -2524,7 +2524,14 @@ label{
 }
 }
 
+/*hiding menu toggles in desktop view*/
+.header-container .fa.fa-bars{
+  display: none;
+}
 
+.header-container .container-nav .fa{
+  display: none;
+}
 
 /* FIXING THE MENU TOGGLE FOR MOBILE VIEW*/
 @media only screen and (max-width: 991px){
