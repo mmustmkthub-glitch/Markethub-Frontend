@@ -2411,3 +2411,67 @@ label{
 #openSignupModal{
   cursor: pointer;
 }
+
+
+/* Media query for screens smaller than 768px (Mobile View) */
+@media (max-width: 767.98px) {
+    /* Target the parent of the columns */
+    .row.align-items-center {
+        /* Enable Flexbox for better ordering and wrapping */
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px;
+    }
+
+    /* 1. Logo (First item in HTML, needs 50% width) */
+    .row.align-items-center > .col-md-3:nth-child(1) {
+        width: calc(60%-2.5px);
+        order: 1; /* Keep it on the first line, left side */
+        padding-left: 5px;
+        padding-right: 0px;
+        margin-right: 0px;
+    }
+
+    /* 2. Account/Cart (Third item in HTML, needs 50% width, moved to right side) */
+    .row.align-items-center > .col-md-3:nth-child(3) {
+        width: calc(40%-2.5px);
+        order: 1; /* Keep it on the first line, right side */
+        padding-left:0 ;
+        padding-right: 0px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .row.align-items-center > .col-md-3:nth-child(3) > div {
+        /* Reduce the horizontal margin to bring the two elements closer together */
+        margin-left: 5px; /* Controls the gap between Register and Cart */
+        margin-right: 5px;
+    }
+
+    /* 3. Search Bar (Second item in HTML, moves to the second line, full width) */
+    .row.align-items-center > .col-md-6:nth-child(2) {
+        width: 100%; /* Take full width on the new line */
+        order: 2; /* Force it to the second line */
+    }
+
+    .header-ctn>div>a>span {
+       font-size: 10px;
+    }
+
+    .header-logo .logo img{
+      margin-left: 5px;
+
+
+    }
+
+    .header-ctn>div+div {
+  margin-left: 0px;
+  margin-right: 30px;
+}
+    .header-ctn .mobile-only-register{
+      margin-right: 0px !important;
+    }
+
+
+
+}
