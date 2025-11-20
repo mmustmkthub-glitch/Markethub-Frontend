@@ -25,7 +25,7 @@ async function loadAds() {
 
     const data = await res.json();
 
-    // ✅ Extract the list correctly (from pagination)
+    // Extract the list correctly (from pagination)
     const ads = Array.isArray(data) ? data : data.results || [];
 
     if (!ads.length) {
@@ -38,6 +38,7 @@ async function loadAds() {
 
   } catch (err) {
     console.error("⚠️ Error fetching ads:", err.message);
+
     adsSection.innerHTML = "<p>Could not load ads. Please try again later.</p>";
 
     bannerInner.innerHTML = `
@@ -62,7 +63,7 @@ function renderBanner(ads) {
     .map(
       (ad) => `
       <div class="banner-slide">
-        <img src="${ad.image || 'https://via.placeholder.com/1200x300?text=No+Image'}" alt="${ad.title}">
+        <img src="${ad.image_url || 'https://via.placeholder.com/1200x300?text=No+Image'}" alt="${ad.title}">
         <div class="banner-overlay">
           <h2>${ad.title}</h2>
           <p>${ad.description || "No description provided."}</p>
@@ -112,6 +113,7 @@ if (nextBtn && prevBtn) {
   });
 }
 
+
 // ---------------------------
 // RENDER ADS GRID
 // ---------------------------
@@ -125,7 +127,7 @@ function renderAds(ads) {
     .map(
       (ad) => `
       <div class="ad-card" data-id="${ad.id}">
-        <img src="${ad.image || 'https://via.placeholder.com/800x400?text=No+Image'}" alt="${ad.title}">
+        <img src="${ad.image_url || 'https://via.placeholder.com/800x400?text=No+Image'}" alt="${ad.title}">
         <div class="ad-info">
           <h3>${ad.title}</h3>
           <p>${ad.description || "No description provided."}</p>
@@ -141,6 +143,7 @@ function renderAds(ads) {
   });
 }
 
+
 // ---------------------------
 // MODAL FUNCTIONALITY
 // ---------------------------
@@ -149,13 +152,19 @@ const closeModal = document.getElementById("closeModal");
 
 function openAdModal(ad) {
   document.getElementById("modalBanner").src =
-    ad.image || "https://via.placeholder.com/800x400?text=No+Image";
+    ad.image_url || "https://via.placeholder.com/800x400?text=No+Image";
   document.getElementById("modalTitle").textContent = ad.title;
   document.getElementById("modalDescription").textContent =
     ad.description || "No description available.";
-  document.getElementById("modalTarget").textContent = "—";
-  document.getElementById("modalDuration").textContent = "—";
-  document.getElementById("modalBudget").textContent = "—";
+
+  document.getElementById("modalTarget").textContent =
+    ad.target_audience_display || "—";
+
+  document.getElementById("modalDuration").textContent =
+    ad.duration_days ? ad.duration_days + " days" : "—";
+
+  document.getElementById("modalBudget").textContent =
+    ad.budget_kes ? "KES " + ad.budget_kes : "—";
 
   modal.style.display = "flex";
 }
@@ -167,6 +176,7 @@ closeModal.addEventListener("click", () => {
 window.addEventListener("click", (e) => {
   if (e.target === modal) modal.style.display = "none";
 });
+
 
 // ---------------------------
 // INITIALIZE
