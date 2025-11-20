@@ -1,11 +1,11 @@
 // ================================
-// 🛍️ MMUST MarketHub - Marketplace
+// 🛍️ MMUST MarketHub - Marketplace (Fixed)
 // ================================
 
 // ---------- API BASE URL ----------
 const API_URL = "https://mmustmkt-hub.onrender.com/api/products/products/";
 
-// ---------- DOM ELEMENTS ----------
+// ---------- DOM ELEMENTS (guarded) ----------
 const grid = document.getElementById('product-grid');
 const categorySelect = document.getElementById('category');
 const sortSelect = document.getElementById('sort');
@@ -32,7 +32,8 @@ function addToCart(product) {
       name: product.name,
       price: product.price,
       seller: product.seller || "Unknown Seller",
-      image: product.image || product.image_url || "https://via.placeholder.com/230?text=No+Image",
+      // ✅ Use image_url first (Cloudinary full URL). fallback to image (rare) then placeholder
+      image: product.image_url || product.image || "https://via.placeholder.com/230?text=No+Image",
       quantity: 1
     });
   }
@@ -40,8 +41,25 @@ function addToCart(product) {
   localStorage.setItem("cartItems", JSON.stringify(cart));
   updateCartCount();
 
-  // Friendly feedback
-  alert(`✅ ${product.name} added to cart!`);
+  // Friendly feedback (non-blocking)
+  showToast(`${product.name} added to cart`);
+}
+
+// small non-blocking toast
+function showToast(message, timeout = 1200) {
+  const t = document.createElement('div');
+  t.textContent = message;
+  t.style.position = 'fixed';
+  t.style.right = '20px';
+  t.style.bottom = '20px';
+  t.style.background = '#000';
+  t.style.color = '#fff';
+  t.style.padding = '10px 14px';
+  t.style.borderRadius = '8px';
+  t.style.boxShadow = '0 6px 18px rgba(0,0,0,0.3)';
+  t.style.zIndex = 9999;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), timeout);
 }
 
 // ---------- PRODUCT STATE ----------
@@ -51,74 +69,93 @@ let visibleCount = 6;
 
 // ---------- FETCH PRODUCTS ----------
 async function fetchProducts() {
+  if (!grid) return console.warn('Product grid element not found in DOM.');
+
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
 
-    const text = await response.text();
-    console.log("Raw API Response:", text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      throw new Error("Invalid JSON format from API");
-    }
+    const data = await response.json();
+    console.log('Raw API Response:', JSON.stringify(data));
 
     if (data && Array.isArray(data.results)) {
       products = data.results;
     } else if (Array.isArray(data)) {
       products = data;
     } else {
-      throw new Error("Unexpected API response format");
+      throw new Error('Unexpected API response format');
     }
 
     filteredProducts = [...products];
     filterAndSort();
 
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
     if (grid) {
-      grid.innerHTML = `
-        <p style="text-align:center; color:red;">
-          ⚠️ Failed to load products. Please check your API server.<br>
-          <small>${error.message}</small>
-        </p>`;
+      grid.innerHTML = `\n        <p style="text-align:center; color:red;">\n          ⚠️ Failed to load products. Please check your API server.<br>\n          <small>${error.message}</small>\n        </p>`;
     }
   }
 }
 
 // ---------- DISPLAY PRODUCTS ----------
 function displayProducts(items) {
+  if (!grid) return;
   grid.innerHTML = "";
   const visibleItems = items.slice(0, visibleCount);
 
   if (visibleItems.length === 0) {
     grid.innerHTML = "<p style='text-align:center;'>No products found 😔</p>";
-    loadMoreBtn.style.display = 'none';
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
     return;
   }
 
   visibleItems.forEach(p => {
-    const card = document.createElement("div");
-    card.classList.add("product-card");
+    const imageUrl = p.image_url || p.image || 'https://via.placeholder.com/230?text=No+Image';
+
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    // Use onerror to fallback if image 404s
     card.innerHTML = `
-      <img src="${p.image || p.image_url || 'https://via.placeholder.com/230?text=No+Image'}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p><strong>KES ${parseFloat(p.price).toLocaleString()}</strong></p>
-      <p>${p.seller || "Unknown Seller"} — ${p.location || ""}</p>
+      <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/230?text=No+Image'">
+      <h3>${escapeHtml(p.name)}</h3>
+      <p><strong>KES ${Number(p.price).toLocaleString()}</strong></p>
+      <p>${escapeHtml(p.seller || 'Unknown Seller')} — ${escapeHtml(p.location || '')}</p>
       <div class="actions">
         <button class="cart-btn"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
         <button class="message-btn"><i class="fa fa-envelope"></i> Message Seller</button>
       </div>
     `;
 
-    // ✅ Add to cart handler
-    card.querySelector(".cart-btn").addEventListener("click", () => addToCart(p));
+    // attach add to cart
+    const cartBtn = card.querySelector('.cart-btn');
+    if (cartBtn) {
+      cartBtn.addEventListener('click', () => addToCart(p));
+    }
+
+    // optional: message handler
+    const msgBtn = card.querySelector('.message-btn');
+    if (msgBtn) {
+      msgBtn.addEventListener('click', () => {
+        showToast('Messaging feature not implemented yet');
+      });
+    }
+
     grid.appendChild(card);
   });
 
-  loadMoreBtn.style.display = visibleCount >= items.length ? "none" : "block";
+  if (loadMoreBtn) loadMoreBtn.style.display = visibleCount >= items.length ? 'none' : 'block';
+}
+
+// simple html escape to avoid injection
+function escapeHtml(str) {
+  if (!str && str !== 0) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 // ---------- FILTER & SORT ----------
@@ -126,50 +163,43 @@ function filterAndSort() {
   visibleCount = 6;
   filteredProducts = [...products];
 
-  const selectedCategory = categorySelect.value;
-  const sortOption = sortSelect.value;
-  const searchTerm = searchInput.value.toLowerCase();
+  const selectedCategory = categorySelect ? categorySelect.value : 'all';
+  const sortOption = sortSelect ? sortSelect.value : '';
+  const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
 
-  if (selectedCategory !== "all") {
+  if (selectedCategory && selectedCategory !== 'all') {
     filteredProducts = filteredProducts.filter(p => p.category === selectedCategory);
   }
 
   if (searchTerm) {
     filteredProducts = filteredProducts.filter(p =>
-      p.name.toLowerCase().includes(searchTerm) ||
+      (p.name && p.name.toLowerCase().includes(searchTerm)) ||
       (p.seller && p.seller.toLowerCase().includes(searchTerm))
     );
   }
 
-  if (sortOption === "lowest") filteredProducts.sort((a, b) => a.price - b.price);
-  if (sortOption === "highest") filteredProducts.sort((a, b) => b.price - a.price);
-  if (sortOption === "newest") filteredProducts.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+  if (sortOption === 'lowest') filteredProducts.sort((a, b) => Number(a.price) - Number(b.price));
+  if (sortOption === 'highest') filteredProducts.sort((a, b) => Number(b.price) - Number(a.price));
+  if (sortOption === 'newest') filteredProducts.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
 
   displayProducts(filteredProducts);
 }
 
-// ---------- EVENT LISTENERS ----------
-categorySelect.addEventListener("change", () => {
-  filterAndSort();
-  updatePageTitle();
-});
-sortSelect.addEventListener("change", filterAndSort);
-searchInput.addEventListener("input", () => {
-  filterAndSort();
-  updatePageTitle();
-});
-
-loadMoreBtn.addEventListener("click", () => {
-  visibleCount += 6;
-  displayProducts(filteredProducts);
-});
+// ---------- EVENT LISTENERS (guarded) ----------
+if (categorySelect) {
+  categorySelect.addEventListener('change', () => {
+    filterAndSort();
+    updatePageTitle();
+  });
+}
+if (sortSelect) sortSelect.addEventListener('change', filterAndSort);
+if (searchInput) searchInput.addEventListener('input', () => { filterAndSort(); updatePageTitle(); });
+if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => { visibleCount += 6; displayProducts(filteredProducts); });
 
 // 🛒 Cart navigation
-const cartIcon = document.getElementById("cart");
+const cartIcon = document.getElementById('cart');
 if (cartIcon) {
-  cartIcon.addEventListener("click", () => {
-    window.location.href = "cart.html";
-  });
+  cartIcon.addEventListener('click', () => { window.location.href = 'cart.html'; });
 }
 
 // ---------- INITIAL LOAD ----------
@@ -177,13 +207,13 @@ fetchProducts();
 
 // ---------- DYNAMIC PAGE TITLE ----------
 function updatePageTitle() {
-  let title = "MMUST MarketHub | Marketplace";
-  const selectedCategory = categorySelect.value;
-  const searchTerm = searchInput.value.trim();
+  let title = 'MMUST MarketHub | Marketplace';
+  const selectedCategory = categorySelect ? categorySelect.value : 'all';
+  const searchTerm = searchInput ? searchInput.value.trim() : '';
 
   if (searchTerm) {
     title = `MMUST MarketHub | Searching for "${searchTerm}"`;
-  } else if (selectedCategory !== "all") {
+  } else if (selectedCategory && selectedCategory !== 'all') {
     title = `MMUST MarketHub | ${selectedCategory}`;
   }
 
