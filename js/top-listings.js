@@ -1,16 +1,16 @@
 /* ===========================
-   🛍️ Top Listings Section JS (FINAL VERSION)
-   Integrated with API + Add-to-Cart + Success Redirect
+   🛍️ Top Listings Section JS (FINAL FIXED VERSION)
+   Uses correct Cloudinary image_url
    =========================== */
 
 document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll(".section-tab-nav li a");
     const productsContainer = document.querySelector(".products-slick");
 
-    // ✅ Your live API endpoint
+    // 🔗 Live API endpoint
     const API_URL = "https://mmustmkt-hub.onrender.com/api/toplistings/";
 
-    // Default category on load
+    // Default category
     let currentCategory = "Electronics";
 
     // ===========================
@@ -47,21 +47,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // 🧱 Render products dynamically
+    // 🧱 Render products
     // ===========================
     function renderProducts(products) {
         productsContainer.innerHTML = "";
+        
         products.forEach(product => {
             const productHTML = `
                 <div class="product" 
                      data-id="${product.id}"
                      data-name="${product.name}"
                      data-price="${product.price}"
-                     data-image="${product.image}"
+                     data-image="${product.image_url}"
                      data-category="${product.category}">
                      
                     <div class="product-img">
-                        <img src="${product.image}" alt="${product.name}">
+                        <img src="${product.image_url}" alt="${product.name}">
                         <div class="product-label">
                             ${product.discount ? `<span class="sale">-${product.discount}%</span>` : ""}
                             ${product.is_new ? `<span class="new">NEW</span>` : ""}
@@ -91,12 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
             productsContainer.insertAdjacentHTML("beforeend", productHTML);
         });
 
-        // 🆕 After rendering, attach Add-to-Cart listeners
         attachAddToCartListeners();
     }
 
     // ===========================
-    // ⭐ Add to Cart functionality
+    // ⭐ Add to Cart
     // ===========================
     function attachAddToCartListeners() {
         const cartButtons = document.querySelectorAll(".add-to-cart-btn");
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     id: productEl.dataset.id,
                     name: productEl.dataset.name,
                     price: parseFloat(productEl.dataset.price),
-                    image: productEl.dataset.image,
+                    image: productEl.dataset.image,   // ✔ Correct Cloudinary URL
                     category: productEl.dataset.category,
                     quantity: 1,
                 };
@@ -118,13 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ===========================
-    // 💾 Save to localStorage + Redirect
-    // ===========================
     function addToCart(product) {
         let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-        // Check if product already exists
         const existing = cart.find(item => item.id === product.id);
         if (existing) {
             existing.quantity += 1;
@@ -132,15 +128,12 @@ document.addEventListener("DOMContentLoaded", () => {
             cart.push(product);
         }
 
-        // Save updated cart
         localStorage.setItem("cartItems", JSON.stringify(cart));
-
-        // 🟢 Show success image + redirect
         showAddToCartSuccess(product);
     }
 
     // ===========================
-    // 🎉 Success Animation + Redirect
+    // 🎉 Success Overlay
     // ===========================
     function showAddToCartSuccess(product) {
         const overlay = document.createElement("div");
@@ -167,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.body.appendChild(overlay);
 
-        // Redirect to cart after short delay
         setTimeout(() => {
             overlay.remove();
             window.location.href = "cart.html";
@@ -175,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // ⭐ Render stars (rating out of 5)
+    // ⭐ Rating stars
     // ===========================
     function renderStars(rating) {
         const stars = Math.min(5, Math.max(0, Math.round(rating / 2)));
@@ -187,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // 🎠 Initialize Slick carousel
+    // 🎠 Slick Carousel
     // ===========================
     function initializeSlick() {
         if (typeof $ !== "undefined" && $(".products-slick").slick) {
@@ -210,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // 🏷️ Handle tab clicks (category switch)
+    // 🏷️ Handle Category Tabs
     // ===========================
     tabs.forEach(tab => {
         tab.addEventListener("click", e => {
@@ -224,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ===========================
-    // 🚀 Initial load
+    // 🚀 Initial Load
     // ===========================
     loadProducts(currentCategory);
 });
