@@ -26,6 +26,18 @@ async function refreshAccessToken() {
   }
 }
 
+// ================================
+// 🛍️ MMUST MarketHub - Cart Logic
+// ================================
+
+// Retrieve saved cart
+let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+// DOM Elements
+const cartTable = document.getElementById("cart-items");
+const totalDisplay = document.getElementById("cart-total");
+const checkoutBtn = document.getElementById("checkout");
+
 // =======================
 // 🛒 Render Cart Items
 // =======================
@@ -77,16 +89,17 @@ function renderCart() {
 }
 
 // =======================
-// 🚀 Handle Checkout Redirect
+// 🚀 Handle Checkout Redirect (with token refresh)
 // =======================
-checkoutBtn.addEventListener("click", () => {
+checkoutBtn.addEventListener("click", async () => {
   if (cart.length === 0) {
     alert("⚠️ Your cart is empty!");
     return;
   }
 
-  // ✅ Check login status
-  const token = localStorage.getItem("access_token");
+  // 🔒 Check login status
+  let token = localStorage.getItem("access_token");
+
   if (!token) {
     alert("🔒 Please log in before proceeding to checkout.");
     localStorage.setItem("redirect_after_login", window.location.href);
@@ -94,11 +107,27 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  // ✅ Save cart and subtotal for checkout page
+  // 🔐 Check if token is expired (call a protected test endpoint)
+  const test = await fetch("https://mmustmkt-hub.onrender.com/api/auth/test/", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  // Token expired → refresh it
+  if (test.status === 401) {
+    token = await refreshAccessToken();
+    if (!token) {
+      alert("Your session expired. Please log in again.");
+      window.location.href = "sign-up-overlay.html";
+      return;
+    }
+  }
+
+  // 💾 Save cart and subtotal for checkout page
   const total_price = cart.reduce(
     (sum, item) => sum + (parseFloat(item.price) || 0) * (parseInt(item.quantity) || 1),
     0
   );
+
   localStorage.setItem("checkoutItems", JSON.stringify(cart));
   localStorage.setItem("checkoutTotal", total_price);
 
