@@ -187,7 +187,7 @@ async function trackOrder(orderId) {
       <div class="tracking-info">
         <h4>Order #${orderId}</h4>
         <p><strong>Status:</strong> ${data.status}</p>
-        <p><strong>Estimated Delivery:</strong> ${data.estimated_delivery || "1 Hour"}</p>
+        <p><strong>Estimated Delivery:</strong> ${data.estimated_delivery || "1"}</p>
         <p><strong>Current Location:</strong> ${data.current_location || "Mmust"}</p>
       </div>
     `;
