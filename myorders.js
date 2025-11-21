@@ -187,8 +187,8 @@ async function trackOrder(orderId) {
       <div class="tracking-info">
         <h4>Order #${orderId}</h4>
         <p><strong>Status:</strong> ${data.status}</p>
-        <p><strong>Estimated Delivery:</strong> ${data.estimated_delivery || "1"}</p>
-        <p><strong>Current Location:</strong> ${data.current_location || "Mmust"}</p>
+        <p><strong>Estimated Delivery:</strong> ${data.estimated_delivery || "N/A"}</p>
+        <p><strong>Current Location:</strong> ${data.current_location || "Unknown"}</p>
       </div>
     `;
   } catch {
@@ -213,7 +213,7 @@ document.getElementById("feedback-form")?.addEventListener("submit", async (e) =
   result.textContent = "Submitting your feedback...";
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/feedbacks/", {
+    const res = await fetch("https://mmustmkt-hub.onrender.com/api/feedbacks/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message, rating }),
