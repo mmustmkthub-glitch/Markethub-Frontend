@@ -1,14 +1,30 @@
-// ================================
-// 🛍️ MMUST MarketHub - Cart Logic
-// ================================
+// ===============================
+// 🔄 Refresh Access Token (SimpleJWT)
+// ===============================
+async function refreshAccessToken() {
+  const refresh = localStorage.getItem("refresh_token");
+  if (!refresh) return null;
 
-// Retrieve saved cart from localStorage
-let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+  try {
+    const res = await fetch("https://mmustmkt-hub.onrender.com/api/auth/token/refresh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh })
+    });
 
-// DOM Elements
-const cartTable = document.getElementById("cart-items");
-const totalDisplay = document.getElementById("cart-total");
-const checkoutBtn = document.getElementById("checkout");
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("access_token", data.access);
+      return data.access;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.error("Refresh error:", err);
+    return null;
+  }
+}
 
 // =======================
 // 🛒 Render Cart Items
