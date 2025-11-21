@@ -1,303 +1,332 @@
-/*=========================================================
-   🛒 MMUST MarketHub - Seller Dashboard (v13 TOKEN REFRESH)
-   Features: Products, Ads, Orders, Feedbacks, Seller Profile,
-   Subscriptions + Paystack Payments
-   ✅ Added SimpleJWT Access Token Auto-Refresh
-========================================================= */
-
 const BASE_API = "https://mmustmkt-hub.onrender.com/api";
-const API_PRODUCTS = `${BASE_API}/products/`;
-const API_ORDERS_SELLER = `${BASE_API}/orders/mine/`;
-const API_ADS = `${BASE_API}/ads/`;
-const API_FEEDBACKS = `${BASE_API}/feedbacks/`;
-const API_SELLER_ME = `${BASE_API}/users/seller-profile/`;
-const FALLBACK_IMAGE = "https://via.placeholder.com/300x200?text=No+Image";
 
-/* =========================================================
-   🔄 TOKEN REFRESH SYSTEM (SimpleJWT)
-========================================================= */
+const API_URLS = {
+    orders: `${BASE_API}/orders/mine/`,
+    searchOrders: `${BASE_API}/orders/search/`, // 🆕 search endpoint
+    trackOrder: `${BASE_API}/orders/track/`,
+    feedbacks: `${BASE_API}/feedbacks/`,
+    contact: `${BASE_API}/contact/`,
+    buyerProfile: `${BASE_API}/users/buyer-profile/`,
+    refreshToken: `${BASE_API}/token/refresh/`,
+};
 
-// 🔥 Refresh expired access token
+// ================================
+// 🔒 AUTH CHECK
+// ================================
+const accessToken = localStorage.getItem("access_token");
+if (!accessToken) {
+    localStorage.setItem("redirect_after_login", "myorders.html");
+    alert("⚠️ Please log in to access your dashboard.");
+    window.location.href = "login.html";
+}
+
+// ================================
+// 🧠 AUTH HELPERS
+// ================================
+function authHeaders() {
+    const token = localStorage.getItem("access_token");
+    return {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+    };
+}
+
 async function refreshAccessToken() {
-  const refresh = localStorage.getItem("refresh_token");
-  if (!refresh) return null;
+    const refresh = localStorage.getItem("refresh_token");
+    if (!refresh) return false;
 
-  try {
-    const res = await fetch(`${BASE_API}/auth/token/refresh/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh })
-    });
+    try {
+        const res = await fetch(API_URLS.refreshToken, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh }),
+        });
 
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem("access_token", data.access);
-      return data.access;
+        if (!res.ok) throw new Error("Token refresh failed");
+
+        const data = await res.json();
+        localStorage.setItem("access_token", data.access);
+        return true;
+    } catch {
+        return false;
     }
-    return null;
-  } catch (err) {
-    console.error("Refresh Token Error:", err);
-    return null;
-  }
 }
 
-// 🚀 Auto-fetch that retries request when access token has expired
-async function autoFetch(url, options = {}) {
-  let response = await fetch(url, options);
+async function secureFetch(url, options = {}) {
+    let res = await fetch(url, options);
 
-  // If unauthorized → refresh token → retry
-  if (response.status === 401) {
-    const newToken = await refreshAccessToken();
-    if (!newToken) return response;
-
-    // retry with new access token
-    const retryHeaders = options.headers || {};
-    retryHeaders["Authorization"] = `Bearer ${newToken}`;
-    options.headers = retryHeaders;
-
-    response = await fetch(url, options);
-  }
-
-  return response;
-}
-
-/* =========================================================
-   🔧 HELPERS
-========================================================= */
-
-function authHeaders(isJson = true) {
-  const token = localStorage.getItem("access_token");
-  const headers = {};
-  if (isJson) headers["Content-Type"] = "application/json";
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-}
-
-async function safeJson(resp) {
-  const text = await resp.text();
-  try { return JSON.parse(text); } catch { return text || null; }
-}
-
-function toArrayMaybe(payload) {
-  if (!payload) return [];
-  if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload.results)) return payload.results;
-  return [];
-}
-
-function escapeHtml(s) {
-  return String(s || "").replace(/[&<>"]/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
-  }[c]));
-}
-
-function showMessage(selector, msg, isError = false) {
-  const el = document.querySelector(selector);
-  if (el) el.innerHTML =
-    `<div class="${isError ? 'error' : 'success'}">${msg}</div>`;
-}
-
-/* =========================================================
-   🪙 SUBSCRIPTIONS + PAYSTACK
-========================================================= */
-
-let currentPlan = localStorage.getItem("currentPlan") || "free";
-
-// (same your previous subscription functions...)
-/* --- NO CHANGES MADE TO PAYMENT LOGIC --- */
-
-/* =========================================================
-   🛍️ PRODUCTS
-========================================================= */
-
-async function loadProducts(page = 1, q = "", category = "all") {
-  const grid = document.getElementById("productsGrid");
-  if (!grid) return;
-  grid.innerHTML = "Loading products...";
-
-  try {
-    const params = new URLSearchParams({ page });
-    if (q) params.set("search", q);
-    if (category !== "all") params.set("category", category);
-
-    // Public endpoint → no auth needed
-    const resp = await fetch(`${API_PRODUCTS}?${params}`);
-    const data = await safeJson(resp);
-    const items = toArrayMaybe(data);
-
-    if (!items.length) {
-      grid.innerHTML = "<p>No products found.</p>";
-      return;
+    if (res.status === 401 && (await refreshAccessToken())) {
+        options.headers = authHeaders();
+        res = await fetch(url, options);
     }
 
-    grid.innerHTML = items.map(productCardHtml).join("");
-    grid.querySelectorAll("img").forEach(img => {
-      img.onerror = () => (img.src = FALLBACK_IMAGE);
-    });
-
-  } catch (err) {
-    console.error("loadProducts:", err);
-    grid.innerHTML = `<p class="error">Failed to load products.</p>`;
-  }
+    return res;
 }
 
-/* =========================================================
-   📢 ADS
-========================================================= */
-
-async function loadAds() {
-  const out = document.getElementById("adsList");
-  if (!out) return;
-  out.innerHTML = "Loading ads...";
-
-  try {
-    const resp = await autoFetch(API_ADS, { headers: authHeaders() });
-    const data = await safeJson(resp);
-    const ads = toArrayMaybe(data);
-
-    out.innerHTML = ads.length
-      ? ads.map(a => `<div class="card"><h4>${escapeHtml(a.title)}</h4><p>${escapeHtml(a.description)}</p></div>`).join("")
-      : "<p>No ads yet.</p>";
-
-  } catch (err) {
-    out.innerHTML = `<p class="error">Failed to load ads.</p>`;
-  }
-}
-
-document.getElementById("adForm")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const fd = new FormData(e.target);
-
-  try {
-    const resp = await autoFetch(API_ADS, {
-      method: "POST",
-      headers: authHeaders(false),
-      body: fd
-    });
-
-    if (!resp.ok) throw new Error("Error submitting ad.");
-    showMessage("#adsList", "📢 Ad submitted successfully.");
-
-    e.target.reset();
-    loadAds();
-  } catch (err) {
-    showMessage("#adsList", "Failed to submit ad.", true);
-  }
-});
-
-/* =========================================================
-   📦 SELLER ORDERS
-========================================================= */
-
-async function loadSellerOrders() {
-  const out = document.getElementById("ordersList");
-  if (!out) return;
-  out.innerHTML = "Loading orders...";
-
-  try {
-    const resp = await autoFetch(API_ORDERS_SELLER, {
-      headers: authHeaders()
-    });
-    const data = await safeJson(resp);
-    const orders = toArrayMaybe(data);
-
-    out.innerHTML = orders.length
-      ? orders.map(o => `
-        <div class="order-item card">
-          <h4>Order #${o.id}</h4>
-          <p><strong>Buyer:</strong> ${escapeHtml(o.buyer_name || "Unknown")}</p>
-          <p><strong>Total:</strong> KSh ${parseFloat(o.total_price || 0).toLocaleString()}</p>
-        </div>`).join("")
-      : "<p>No orders yet.</p>";
-
-  } catch (err) {
-    out.innerHTML = `<p class="error">Failed to load orders.</p>`;
-  }
-}
-
-/* =========================================================
-   ⭐ FEEDBACKS
-========================================================= */
-
-async function loadFeedbacks() {
-  const out = document.getElementById("feedbackList");
-  if (!out) return;
-  out.innerHTML = "Loading feedback...";
-
-  try {
-    const resp = await autoFetch(API_FEEDBACKS, {
-      headers: authHeaders()
-    });
-    const data = await safeJson(resp);
-    const feedbacks = toArrayMaybe(data);
-
-    out.innerHTML = feedbacks.length
-      ? feedbacks.map(f => `<div class="card"><strong>${escapeHtml(f.user_name)}</strong><p>${escapeHtml(f.text)}</p></div>`).join("")
-      : "<p>No feedback yet.</p>";
-
-  } catch (err) {
-    out.innerHTML = `<p class="error">Failed to load feedbacks.</p>`;
-  }
-}
-
-/* =========================================================
-   👤 SELLER PROFILE
-========================================================= */
-
-async function loadSellerProfile() {
-  try {
-    const resp = await autoFetch(API_SELLER_ME, {
-      headers: authHeaders()
-    });
-    const data = await safeJson(resp);
-
-    document.getElementById("sellerFullName").value = data.full_name || "";
-    document.getElementById("contactEmail").value = data.email || "";
-    document.getElementById("contactPhone").value = data.phone || "";
-    document.getElementById("businessLocation").value = data.location || "";
-    document.getElementById("nationalId").value = data.national_id || "";
-    document.getElementById("businessType").value = data.business_type || "";
-
-  } catch (err) {
-    alert("⚠️ Failed to load profile.");
-  }
-}
-
-document.getElementById("settingsForm")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const payload = {
-    full_name: sellerFullName.value,
-    email: contactEmail.value,
-    phone: contactPhone.value,
-    location: businessLocation.value,
-    national_id: nationalId.value,
-    business_type: businessType.value,
-  };
-
-  try {
-    const resp = await autoFetch(API_SELLER_ME, {
-      method: "PUT",
-      headers: authHeaders(true),
-      body: JSON.stringify(payload)
-    });
-
-    if (!resp.ok) throw new Error();
-    alert("✅ Profile updated successfully.");
-
-  } catch {
-    alert("❌ Failed to update profile.");
-  }
-});
-
-/* =========================================================
-   🚀 INIT
-========================================================= */
-
+// ================================
+// 🧭 TAB NAVIGATION
+// ================================
 document.addEventListener("DOMContentLoaded", () => {
-  loadProducts();
-  loadAds();
-  loadSellerOrders();
-  loadFeedbacks();
-  loadSellerProfile();
+    const tabs = document.querySelectorAll("nav ul li");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            contents.forEach((c) => c.classList.remove("active"));
+
+            tab.classList.add("active");
+            document.getElementById(tab.dataset.tab).classList.add("active");
+        });
+    });
+
+    loadOrders();
+    loadProfile();
+});
+
+// ================================
+// 📦 LOAD BUYER ORDERS
+// ================================
+async function loadOrders() {
+    const container = document.getElementById("orders-container");
+    if (!container) return;
+
+    container.innerHTML = "<p>Loading your orders...</p>";
+
+    try {
+        const res = await secureFetch(API_URLS.orders, {
+            headers: authHeaders(),
+        });
+
+        if (!res.ok) throw new Error("Failed to load orders from API");
+
+        const data = await res.json();
+        const orders = data.results || data;
+
+        if (orders.length === 0) {
+            container.innerHTML = "<p>No orders found.</p>";
+            return;
+        }
+
+        container.innerHTML = renderOrders(orders);
+    } catch (err) {
+        console.error("❌ Failed to load orders:", err.message);
+        container.innerHTML = "<p>❌ Failed to load orders. Please try again later.</p>";
+    }
+}
+
+// ================================
+// 🔍 SEARCH BUYER ORDERS BY NAME
+// ================================
+async function searchOrders() {
+    const name = document.getElementById("buyer-search").value.trim();
+    const container = document.getElementById("orders-container");
+
+    if (!name) {
+        loadOrders();
+        return;
+    }
+
+    container.innerHTML = "<p>Searching orders...</p>";
+
+    try {
+        const res = await secureFetch(
+            `${API_URLS.searchOrders}?buyer_name=${encodeURIComponent(name)}`,
+            { headers: authHeaders() }
+        );
+
+        if (!res.ok) throw new Error("Search failed");
+
+        const orders = await res.json();
+
+        if (orders.length === 0) {
+            container.innerHTML = "<p>No orders found for that name.</p>";
+            return;
+        }
+
+        container.innerHTML = renderOrders(orders);
+    } catch (err) {
+        console.error("❌ Search failed:", err.message);
+        container.innerHTML = "<p>❌ Failed to search orders.</p>";
+    }
+}
+
+// ================================
+// 📦 REUSABLE ORDER RENDER FUNCTION
+// ================================
+function renderOrders(orders) {
+    return orders
+        .map(
+            (order) => `
+        <div class="order-card">
+            <h4>Order #${order.id}</h4>
+            <p><strong>Buyer:</strong> ${order.buyer_name}</p>
+            <p><strong>Total:</strong> KES ${order.total_price}</p>
+            <p><strong>Status:</strong> ${order.status}</p>
+            <p><strong>Payment:</strong> ${order.payment_method}</p>
+            <p><strong>Delivery:</strong> ${order.delivery_option} (Fee: KES ${order.delivery_fee})</p>
+            <p><strong>Placed on:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+            <button onclick="trackOrder(${order.id})">Track Order</button>
+        </div>
+    `
+        )
+        .join("");
+}
+
+// ================================
+// 🚚 TRACK ORDER STATUS (AUTHENTICATED)
+// ================================
+async function trackOrder(orderId) {
+    const result = document.getElementById("track-result");
+    if (!result) return;
+
+    result.innerHTML = "<p>Tracking order...</p>";
+
+    try {
+        const res = await secureFetch(
+            `${API_URLS.trackOrder}${orderId}/`,
+            { headers: authHeaders() }
+        );
+
+        if (!res.ok) throw new Error("Tracking failed");
+
+        const data = await res.json();
+
+        result.innerHTML = `
+            <div class="tracking-info">
+                <h4>Order #${orderId}</h4>
+                <p><strong>Status:</strong> ${data.status}</p>
+                <p><strong>Estimated Delivery:</strong> ${data.estimated_delivery || "N/A"}</p>
+                <p><strong>Current Location:</strong> ${data.current_location || "Unknown"}</p>
+            </div>
+        `;
+    } catch {
+        result.innerHTML = "<p>❌ Unable to track order.</p>";
+    }
+}
+
+document.getElementById("feedback-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("feedback-name").value.trim();
+    const email = document.getElementById("feedback-email").value.trim();
+    const message = document.getElementById("feedback-message").value.trim();
+    const rating = document.getElementById("feedback-rating").value || null;
+    const result = document.getElementById("comment-result");
+
+    if (!name || !email || !message || !rating) {
+        result.textContent = "⚠️ Please fill in all fields before submitting.";
+        return;
+    }
+
+    result.textContent = "Submitting your feedback...";
+
+    try {
+        const res = await fetch("https://mmustmkt-hub.onrender.com/api/feedbacks/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, message, rating }),
+        });
+
+        if (!res.ok) throw new Error("Feedback submission failed");
+
+        result.textContent = "✅ Thank you for your feedback!";
+        document.getElementById("feedback-form").reset();
+    } catch (err) {
+        console.error("❌ Feedback Error:", err);
+        result.textContent = "❌ Failed to submit feedback. Please try again later.";
+    }
+});
+
+// ================================
+// 📞 CONTACT SELLER FORM
+// ================================
+document.getElementById("contact-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const sellerName = document.getElementById("seller-name").value.trim();
+    const message = document.getElementById("message").value.trim();
+    const result = document.getElementById("contact-result");
+
+    if (!sellerName || !message) {
+        result.textContent = "⚠️ Please fill in all fields.";
+        return;
+    }
+
+    result.textContent = "Sending your message...";
+
+    try {
+        const res = await secureFetch(API_URLS.contact, {
+            method: "POST",
+            headers: authHeaders(),
+            body: JSON.stringify({
+                seller_name: sellerName,
+                message: message,
+                buyer_name: localStorage.getItem("buyer_name") || "Anonymous",
+                buyer_email: localStorage.getItem("buyer_email") || "",
+                buyer_phone: localStorage.getItem("buyer_phone") || "",
+            }),
+        });
+
+        if (!res.ok) throw new Error("Failed to send message");
+
+        result.textContent = "✅ Message sent successfully!";
+        document.getElementById("contact-form").reset();
+    } catch (err) {
+        console.error("❌ Contact Error:", err);
+        result.textContent = "❌ Failed to send message. Please try again.";
+    }
+});
+
+// ================================
+// 👤 PROFILE LOAD & UPDATE
+// ================================
+async function loadProfile() {
+    try {
+        const res = await secureFetch(API_URLS.buyerProfile, {
+            headers: authHeaders(),
+        });
+
+        if (!res.ok) throw new Error("Profile load failed");
+
+        const profile = await res.json();
+
+        document.getElementById("user-name").value = profile.name || "";
+        document.getElementById("user-email").value = profile.email || "";
+        document.getElementById("user-phone").value = profile.phone || "";
+        document.getElementById("user-location").value = profile.location || "";
+        document.getElementById("user-id").value = profile.id_number || "";
+    } catch (err) {
+        console.warn("⚠️ Failed to load profile:", err.message);
+    }
+}
+
+document.getElementById("details-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const result = document.getElementById("details-result");
+
+    const updatedData = {
+        name: document.getElementById("user-name").value.trim(),
+        email: document.getElementById("user-email").value.trim(),
+        phone: document.getElementById("user-phone").value.trim(),
+        location: document.getElementById("user-location").value.trim(),
+        id_number: document.getElementById("user-id").value.trim(),
+    };
+
+    result.textContent = "Updating profile...";
+
+    try {
+        const res = await secureFetch(API_URLS.buyerProfile, {
+            method: "PUT",
+            headers: authHeaders(),
+            body: JSON.stringify(updatedData),
+        });
+
+        if (!res.ok) throw new Error("Update failed");
+
+        result.textContent = "✅ Profile updated successfully!";
+    } catch {
+        result.textContent = "❌ Failed to update profile.";
+    }
 });
