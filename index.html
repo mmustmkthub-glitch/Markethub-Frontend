@@ -215,46 +215,71 @@
 </head>
 
 <body>
-    <!-- ===========================
-         🛍️ TOP LISTINGS SECTION
-    ============================ -->
-    <div class="section">
-        <div class="container">
-            <div class="row">
+   <!-- ===========================
+     🛍️ TOP LISTINGS SECTION
+============================ -->
+<div class="section">
+    <div class="container">
+        <div class="row">
 
-                <!-- Section Title -->
-                <div class="col-md-12">
-                    <div class="section-title">
-                        <h3 class="title">Top Listings</h3>
-                        <div class="section-nav">
-                            <ul class="section-tab-nav tab-nav">
-                                <li class="active"><a href="#">Clothes</a></li>
-                                <li><a href="#">Electronics</a></li>
-                                <li><a href="#">Food</a></li>
-                                <li><a href="#">Services</a></li>
-                            </ul>
-                        </div>
+            <!-- Section Title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">Top Listings</h3>
+                    <div class="section-nav">
+                        <ul class="section-tab-nav tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab-all">All</a></li>
+                            <li><a data-toggle="tab" href="#tab-electronics">Electronics & Accessories</a></li>
+                            <li><a data-toggle="tab" href="#tab-fashion">Fashion & Apparel</a></li>
+                            <li><a data-toggle="tab" href="#tab-home">Home & Room Essentials</a></li>
+                            <li><a data-toggle="tab" href="#tab-food">Food & Beverages</a></li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <!-- Products Container -->
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="products-tabs">
-                            <!-- Product Tab -->
-                            <div id="tab1" class="tab-pane active">
-                                <div class="products-slick" data-nav="#slick-nav-1">
-                                    <!-- Products will be injected here by JS -->
-                                </div>
-                                <div id="slick-nav-1" class="products-slick-nav"></div>
-                            </div>
+            <!-- Products Container -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs tab-content">
+
+                        <!-- ALL PRODUCTS -->
+                        <div id="tab-all" class="tab-pane active">
+                            <div class="products-slick" id="all-products" data-nav="#slick-nav-all"></div>
+                            <div id="slick-nav-all" class="products-slick-nav"></div>
                         </div>
+
+                        <!-- Electronics -->
+                        <div id="tab-electronics" class="tab-pane">
+                            <div class="products-slick" id="electronics-products" data-nav="#slick-nav-electronics"></div>
+                            <div id="slick-nav-electronics" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Fashion -->
+                        <div id="tab-fashion" class="tab-pane">
+                            <div class="products-slick" id="fashion-products" data-nav="#slick-nav-fashion"></div>
+                            <div id="slick-nav-fashion" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Home Essentials -->
+                        <div id="tab-home" class="tab-pane">
+                            <div class="products-slick" id="home-products" data-nav="#slick-nav-home"></div>
+                            <div id="slick-nav-home" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Food -->
+                        <div id="tab-food" class="tab-pane">
+                            <div class="products-slick" id="food-products" data-nav="#slick-nav-food"></div>
+                            <div id="slick-nav-food" class="products-slick-nav"></div>
+                        </div>
+
                     </div>
                 </div>
+            </div>
 
-            </div><!-- /row -->
-        </div><!-- /container -->
-    </div><!-- /section -->
+        </div><!-- /row -->
+    </div><!-- /container -->
+</div><!-- /section -->
 
     <!-- ===========================
          🔧 SCRIPTS
