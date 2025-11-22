@@ -1,22 +1,38 @@
 /* ===========================
-   🛍️ Top Listings Section JS (FINAL FIXED VERSION)
-   Uses correct Cloudinary image_url
+   🛍️ Top Listings Section JS (MULTIPLE TABS FIXED)
+   Fully supports All + 4 categories
    =========================== */
 
 document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll(".section-tab-nav li a");
-    const productsContainer = document.querySelector(".products-slick");
 
     // 🔗 Live API endpoint
     const API_URL = "https://mmustmkt-hub.onrender.com/api/toplistings/";
 
+    // Map tab text → container ID
+    const TAB_CONTAINERS = {
+        "All": "all-products",
+        "Electronics & Accessories": "electronics-products",
+        "Fashion & Apparel": "fashion-products",
+        "Home & Room Essentials": "home-products",
+        "Food & Beverages": "food-products",
+    };
+
     // Default category
-    let currentCategory = "Electronics";
+    let currentCategory = "All";
 
     // ===========================
     // 📦 Load products from API
     // ===========================
     async function loadProducts(category) {
+        const containerId = TAB_CONTAINERS[category];
+        const productsContainer = document.getElementById(containerId);
+
+        // Reset ALL containers
+        Object.values(TAB_CONTAINERS).forEach(id => {
+            document.getElementById(id).innerHTML = "";
+        });
+
         productsContainer.innerHTML = `<p class="loading">Loading ${category}...</p>`;
 
         try {
@@ -24,33 +40,38 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (!data.results || !Array.isArray(data.results)) {
-                productsContainer.innerHTML = `<p class="error">⚠️ Unexpected API response format.</p>`;
+                productsContainer.innerHTML = `<p class="error">⚠ Unexpected API response format.</p>`;
                 return;
             }
 
-            // Filter by category
-            const filtered = data.results.filter(
-                product => product.category.toLowerCase() === category.toLowerCase()
-            );
+            let filtered;
+
+            if (category === "All") {
+                filtered = data.results;
+            } else {
+                filtered = data.results.filter(
+                    product => product.category.toLowerCase() === category.toLowerCase()
+                );
+            }
 
             if (!filtered.length) {
                 productsContainer.innerHTML = `<p class="no-products">No ${category} products found.</p>`;
                 return;
             }
 
-            renderProducts(filtered);
-            initializeSlick();
+            renderProducts(filtered, productsContainer);
+            initializeSlick(`#${containerId}`);
         } catch (error) {
             console.error("❌ Error fetching products:", error);
-            productsContainer.innerHTML = `<p class="error">❌ Failed to load products. Please try again later.</p>`;
+            productsContainer.innerHTML = `<p class="error">❌ Failed to load products.</p>`;
         }
     }
 
     // ===========================
     // 🧱 Render products
     // ===========================
-    function renderProducts(products) {
-        productsContainer.innerHTML = "";
+    function renderProducts(products, container) {
+        container.innerHTML = "";
         
         products.forEach(product => {
             const productHTML = `
@@ -73,10 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <p class="product-category">${product.category}</p>
                         <h3 class="product-name"><a href="#">${product.name}</a></h3>
                         <h4 class="product-price">
-                            KES${Number(product.price).toLocaleString()} 
+                            KES ${Number(product.price).toLocaleString()} 
                             ${product.old_price ? `<del class="product-old-price">KES${Number(product.old_price).toLocaleString()}</del>` : ""}
                         </h4>
                         <div class="product-rating">${renderStars(product.rating)}</div>
+
                         <div class="product-btns">
                             <button class="add-to-wishlist"><i class="fa fa-heart-o"></i></button>
                             <button class="add-to-compare"><i class="fa fa-exchange"></i></button>
@@ -89,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             `;
-            productsContainer.insertAdjacentHTML("beforeend", productHTML);
+            container.insertAdjacentHTML("beforeend", productHTML);
         });
 
         attachAddToCartListeners();
@@ -99,20 +121,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // ⭐ Add to Cart
     // ===========================
     function attachAddToCartListeners() {
-        const cartButtons = document.querySelectorAll(".add-to-cart-btn");
-
-        cartButtons.forEach(btn => {
+        document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const productEl = e.target.closest(".product");
                 const product = {
                     id: productEl.dataset.id,
                     name: productEl.dataset.name,
                     price: parseFloat(productEl.dataset.price),
-                    image: productEl.dataset.image,   // ✔ Correct Cloudinary URL
+                    image: productEl.dataset.image,
                     category: productEl.dataset.category,
                     quantity: 1,
                 };
-
                 addToCart(product);
             });
         });
@@ -120,13 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function addToCart(product) {
         let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const existing = cart.find(p => p.id === product.id);
 
-        const existing = cart.find(item => item.id === product.id);
-        if (existing) {
-            existing.quantity += 1;
-        } else {
-            cart.push(product);
-        }
+        if (existing) existing.quantity += 1;
+        else cart.push(product);
 
         localStorage.setItem("cartItems", JSON.stringify(cart));
         showAddToCartSuccess(product);
@@ -137,22 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===========================
     function showAddToCartSuccess(product) {
         const overlay = document.createElement("div");
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100%";
-        overlay.style.height = "100%";
-        overlay.style.backgroundColor = "rgba(0,0,0,0.6)";
-        overlay.style.display = "flex";
-        overlay.style.flexDirection = "column";
-        overlay.style.justifyContent = "center";
-        overlay.style.alignItems = "center";
-        overlay.style.zIndex = "9999";
+        overlay.style = `
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex; justify-content: center;
+            align-items: center; z-index: 9999;`;
 
         overlay.innerHTML = `
             <div style="background:#fff; padding:30px; border-radius:15px; text-align:center;">
-                <img src="assets/img/success.gif" alt="Added!" 
-                     style="width:100px; height:100px; object-fit:contain; margin-bottom:10px;">
+                <img src="assets/img/success.gif" style="width:100px; height:100px;">
                 <h3 style="color:#28a745;">${product.name} added to cart!</h3>
                 <p>Redirecting to your cart...</p>
             </div>
@@ -167,24 +177,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // ⭐ Rating stars
+    // ⭐ Rating Stars
     // ===========================
     function renderStars(rating) {
         const stars = Math.min(5, Math.max(0, Math.round(rating / 2)));
-        let html = "";
-        for (let i = 1; i <= 5; i++) {
-            html += `<i class="fa fa-star${i <= stars ? "" : "-o"}"></i>`;
-        }
-        return html;
+        return Array.from({ length: 5 }, (_, i) =>
+            `<i class="fa fa-star${i < stars ? "" : "-o"}"></i>`
+        ).join("");
     }
 
     // ===========================
     // 🎠 Slick Carousel
     // ===========================
-    function initializeSlick() {
-        if (typeof $ !== "undefined" && $(".products-slick").slick) {
-            $(".products-slick").slick("unslick");
-            $(".products-slick").slick({
+    function initializeSlick(selector) {
+        if (typeof $ !== "undefined" && $(selector).slick) {
+            $(selector).slick("unslick");
+            $(selector).slick({
                 slidesToShow: 4,
                 slidesToScroll: 1,
                 autoplay: true,
@@ -202,14 +210,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ===========================
-    // 🏷️ Handle Category Tabs
+    // 🏷️ Category Tabs
     // ===========================
     tabs.forEach(tab => {
         tab.addEventListener("click", e => {
             e.preventDefault();
             const category = e.target.textContent.trim();
+
             tabs.forEach(t => t.parentElement.classList.remove("active"));
             e.target.parentElement.classList.add("active");
+
             currentCategory = category;
             loadProducts(category);
         });
