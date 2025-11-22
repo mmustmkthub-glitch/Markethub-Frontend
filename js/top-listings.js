@@ -1,27 +1,18 @@
-/* ===========================
-🛍️ Top Listings Section JS (Optimized)
-Fetches only the selected category from backend
-=========================== */
-
 document.addEventListener("DOMContentLoaded", () => {
 const tabs = document.querySelectorAll(".section-tab-nav li a");
-
-```
-// 🔗 Live API endpoint
-const API_URL = "https://mmustmkt-hub.onrender.com/api/toplistings/";
-
+const API_URL = "[https://mmustmkt-hub.onrender.com/api/toplistings/](https://mmustmkt-hub.onrender.com/api/toplistings/)";
 const TAB_CONTAINERS = {
-    "All": "all-products",
-    "Electronics & Accessories": "electronics-products",
-    "Fashion & Apparel": "fashion-products",
-    "Home & Room Essentials": "home-products",
-    "Food & Beverages": "food-products",
+"All": "all-products",
+"Electronics & Accessories": "electronics-products",
+"Fashion & Apparel": "fashion-products",
+"Home & Room Essentials": "home-products",
+"Food & Beverages": "food-products",
 };
-
 let currentCategory = "All";
 
+```
 // ===========================
-// 📦 Load products from API
+// Load products from API
 // ===========================
 async function loadProducts(category) {
     const containerId = TAB_CONTAINERS[category];
@@ -34,7 +25,6 @@ async function loadProducts(category) {
 
     container.innerHTML = `<p class="loading">Loading ${category}...</p>`;
 
-    // Build query param
     const query = category === "All" ? "" : `?category=${encodeURIComponent(category)}`;
 
     try {
@@ -53,6 +43,7 @@ async function loadProducts(category) {
 
         renderProducts(data.results, container);
         initializeSlick(`#${containerId}`);
+        attachAddToCartListeners();
     } catch (error) {
         console.error("❌ Error fetching products:", error);
         container.innerHTML = `<p class="error">❌ Failed to load products.</p>`;
@@ -60,7 +51,7 @@ async function loadProducts(category) {
 }
 
 // ===========================
-// 🧱 Render products
+// Render products
 // ===========================
 function renderProducts(products, container) {
     container.innerHTML = "";
@@ -78,10 +69,9 @@ function renderProducts(products, container) {
                     <p class="product-category">${p.category}</p>
                     <h3 class="product-name"><a href="#">${p.name}</a></h3>
                     <h4 class="product-price">
-                        KES ${Number(p.price).toLocaleString()} 
-                        ${p.old_price ? `<del class="product-old-price">KES${Number(p.old_price).toLocaleString()}</del>` : ""}
+                        KES ${Number(p.price).toLocaleString()}
+                        ${p.old_price ? `<del>KES${Number(p.old_price).toLocaleString()}</del>` : ""}
                     </h4>
-                    <div class="product-rating">${renderStars(p.rating)}</div>
                     <div class="product-btns">
                         <button class="add-to-wishlist"><i class="fa fa-heart-o"></i></button>
                         <button class="add-to-compare"><i class="fa fa-exchange"></i></button>
@@ -94,11 +84,10 @@ function renderProducts(products, container) {
             </div>
         `);
     });
-    attachAddToCartListeners();
 }
 
 // ===========================
-// ⭐ Add to Cart
+// Add to Cart functionality
 // ===========================
 function attachAddToCartListeners() {
     document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
@@ -123,7 +112,16 @@ function addToCart(product) {
     if (existing) existing.quantity += 1;
     else cart.push(product);
     localStorage.setItem("cartItems", JSON.stringify(cart));
+    updateCartCount();
     showAddToCartSuccess(product);
+}
+
+function updateCartCount() {
+    const cartCountEl = document.getElementById("cart-count");
+    if (cartCountEl) {
+        const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        cartCountEl.textContent = cart.reduce((acc, p) => acc + p.quantity, 0);
+    }
 }
 
 function showAddToCartSuccess(product) {
@@ -137,7 +135,7 @@ function showAddToCartSuccess(product) {
 
     overlay.innerHTML = `
         <div style="background:#fff; padding:30px; border-radius:15px; text-align:center;">
-            <img src="assets/img/success.gif" style="width:100px; height:100px;">
+            <img src="img/success.gif" style="width:100px; height:100px;">
             <h3 style="color:#28a745;">${product.name} added to cart!</h3>
             <p>Redirecting to your cart...</p>
         </div>
@@ -149,16 +147,12 @@ function showAddToCartSuccess(product) {
     }, 1500);
 }
 
-function renderStars(rating) {
-    const stars = Math.min(5, Math.max(0, Math.round(rating / 2)));
-    return Array.from({ length: 5 }, (_, i) =>
-        `<i class="fa fa-star${i < stars ? "" : "-o"}"></i>`
-    ).join("");
-}
-
+// ===========================
+// Slick initialization
+// ===========================
 function initializeSlick(selector) {
     if (typeof $ !== "undefined" && $(selector).slick) {
-        $(selector).slick("unslick");
+        if ($(selector).hasClass("slick-initialized")) $(selector).slick("unslick");
         $(selector).slick({
             slidesToShow: 4,
             slidesToScroll: 1,
@@ -177,25 +171,42 @@ function initializeSlick(selector) {
 }
 
 // ===========================
-// 🏷️ Category Tabs
+// Category Tabs
 // ===========================
 tabs.forEach(tab => {
     tab.addEventListener("click", e => {
         e.preventDefault();
         const category = e.target.textContent.trim();
-
         tabs.forEach(t => t.parentElement.classList.remove("active"));
         e.target.parentElement.classList.add("active");
-
         currentCategory = category;
         loadProducts(category);
     });
 });
 
 // ===========================
-// 🚀 Initial Load
+// Initial load
 // ===========================
 loadProducts(currentCategory);
+updateCartCount();
+
+// ===========================
+// Navigation menu
+// ===========================
+window.showMenu = () => document.getElementById("navLinks").style.left = "0";
+window.hideMenu = () => document.getElementById("navLinks").style.left = "-200px";
+
+// ===========================
+// Search redirect
+// ===========================
+const searchForm = document.getElementById("home-search-form");
+if (searchForm) {
+    searchForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const query = document.getElementById("home-search").value.trim();
+        window.location.href = `marketplace.html?search=${encodeURIComponent(query)}`;
+    });
+}
 ```
 
 });
